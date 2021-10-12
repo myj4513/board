@@ -1,5 +1,6 @@
 package study.board.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import study.board.dto.User;
@@ -12,14 +13,10 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class UserDao{
 
-    private DataSource datasource;
-
-    @Autowired
-    public void setDatasource(DataSource datasource) {
-        this.datasource = datasource;
-    }
+    private final DataSource dataSource;
 
     public int add(User user) {
 
@@ -28,7 +25,7 @@ public class UserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
-            con = datasource.getConnection();
+            con = dataSource.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, user.getLoginId());
             pstmt.setString(2, user.getPassword());
@@ -49,10 +46,10 @@ public class UserDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
-            con = datasource.getConnection();
+            con = dataSource.getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, id);
-            rs = pstmt.executeQuery(sql);
+            rs = pstmt.executeQuery();
 
             if(rs.next()){
                 User user = new User(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
@@ -86,6 +83,24 @@ public class UserDao{
                 con.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void clear(){
+        String sql = "delete from user";
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            con = dataSource.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+        finally {
+            close(con, pstmt, rs);
         }
     }
 }
