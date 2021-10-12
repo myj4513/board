@@ -2,10 +2,11 @@ package study.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
-@RequiredArgsConstructor
+@Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class User {
     private String loginId;
