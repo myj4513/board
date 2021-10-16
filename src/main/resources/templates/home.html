@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+</head>
+<body>
+<h1>Board</h1>
+
+<div>
+    <input type="button" value="로그인" th:onclick="|location.href='@{/login}'|">
+    <input type="button" value="회원가입" th:onclick="|location.href='@{/signup}'|">
+</div>
+<div>
+    <input type="button" value="글 작성" th:onclick="|location.href='@{/article/write}'|">
+</div>
+
+<table>
+    <th>No.</th>
+    <th>Title</th>
+    <th></th>
+    <tr th:each="article : ${articles}">
+        <td><a th:href="|/article/${article.id}|" th:text="${article.id}"></a></td>
+        <td><a th:href="|/article/${article.id}|" th:text="${article.title}"></a></td>
+        <td><a th:href="|/article/${article.id}|" th:text="${article.regDate}"></a></td>
+    </tr>
+
+</table>
+
+</body>
+</html>

@@ -1,21 +1,31 @@
 package study.board.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Getter @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+    private int id;
+    @Size(min = 3, max = 20)
     private String loginId;
+    @Size(min = 8, max = 20)
     private String password;
+    @NotBlank
     private String name;
+    @NotBlank
+    @Email
     private String email;
 
-    public User(UserInput userInput){
-        this.loginId = userInput.getLoginId();
-        this.password = userInput.getPassword();
-        this.name = userInput.getName();
-        this.email = userInput.getEmail();
+    public User(String loginId, String password, String name, String email){
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.email = email;
     }
 }

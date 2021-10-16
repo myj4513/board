@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+</head>
+<body>
+<h1>Board</h1>
+
+<div>
+    <span th:text="${user.getName()}">userName</span>
+    <input type="button" value="로그아웃" th:onclick="|location.href='@{/logout}'|">
+</div>
+<div>
+    <input type="button" value="글 작성" th:onclick="|location.href='@{/article/write}'|">
+</div>
+</body>
+</html>
