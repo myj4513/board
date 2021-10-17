@@ -6,6 +6,8 @@ import study.board.dao.ArticleDao;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
@@ -20,4 +22,7 @@ public class ArticleService {
         articleDao.add(article);
     }
 
+    public Optional<Article> findById(int articleId) {
+        return articleDao.findById(articleId);
+    }
 }

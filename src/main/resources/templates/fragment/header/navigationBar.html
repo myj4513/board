@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Navigation Bar</title>
+</head>
+<body>
+
+<div th:fragment="loggedIn (userName)">
+  <span th:text="${userName}">username</span>
+  <input type="button" value="로그아웃" th:onclick="|location.href='@{/logout}'|">
+</div>
+
+<div th:fragment="notLoggedIn">
+  <input type="button" value="로그인" th:onclick="|location.href='@{/login}'|">
+  <input type="button" value="회원가입" th:onclick="|location.href='@{/signup}'|">
+</div>
+
+</body>
+</html>

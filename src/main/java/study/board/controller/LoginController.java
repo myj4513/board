@@ -27,13 +27,13 @@ public class LoginController {
     @GetMapping("/login")
     public String loginForm(Model model) {
         model.addAttribute("loginForm", new LoginForm());
-        return "form/login";
+        return "user/form/login";
     }
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult, @RequestParam(defaultValue = "/") String redirectURL, HttpServletRequest request) throws NoSuchAlgorithmException {
         if (bindingResult.hasErrors()) {
-            return "form/login";
+            return "user/form/login";
         }
 
 
@@ -42,7 +42,7 @@ public class LoginController {
         //로그인 실패
         if (loginUser==null){
             bindingResult.reject("wrong.loginForm");
-            return "form/login";
+            return "user/form/login";
         }
 
         //로그인 성공, 쿠키 생성

@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
 </head>
+
+<header th:if="${isLoggedIn}">
+    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+</header>
+<header th:unless="${isLoggedIn}">
+    <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
+</header>
+
 <body>
 <h1>Board</h1>
 
-<div>
-    <input type="button" value="로그인" th:onclick="|location.href='@{/login}'|">
-    <input type="button" value="회원가입" th:onclick="|location.href='@{/signup}'|">
-</div>
 <div>
     <input type="button" value="글 작성" th:onclick="|location.href='@{/article/write}'|">
 </div>
@@ -24,7 +28,6 @@
         <td><a th:href="|/article/${article.id}|" th:text="${article.title}"></a></td>
         <td><a th:href="|/article/${article.id}|" th:text="${article.regDate}"></a></td>
     </tr>
-
 </table>
 
 </body>

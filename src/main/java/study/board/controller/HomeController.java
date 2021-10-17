@@ -20,15 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final ArticleDao articleDao;
+    private final ArticleDao articleDao;  //릴레이 메서드로 수정하세요
 
     @GetMapping("/")
     public String homeLogin(@SessionAttribute(name = SessionConst.LOGIN_USER ,required = false) User user, Model model){
 
-        if(user==null) return "home";
+        if(user!=null) {
+            model.addAttribute("user", user);
+        }
 
-        model.addAttribute("user", user);
-        return "loginHome";
+        return "home";
     }
 
     @ModelAttribute("articles")

@@ -15,9 +15,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        log.info(request.getRequestURI());
-        if(request.getRequestURI().equals("/article/write")){
-            log.info("hi");
+        if(request.getMethod().equals("GET")){
+            return true;
         }
 
         HttpSession session = request.getSession(false);

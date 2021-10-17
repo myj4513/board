@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 @Getter @Setter
 @NoArgsConstructor
 public class User {
+
     private int id;
     @Size(min = 3, max = 20)
     private String loginId;

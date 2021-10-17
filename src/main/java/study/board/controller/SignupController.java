@@ -22,7 +22,7 @@ public class SignupController {
     @GetMapping("/signup")
     public String signupForm(Model model) {
         model.addAttribute("user", new User());
-        return "form/signup";
+        return "user/form/signup";
     }
 
     @PostMapping("/signup")
@@ -30,13 +30,13 @@ public class SignupController {
 
         if(bindingResult.hasErrors()){
             log.info("error : {}", bindingResult);
-            return "form/signup";
+            return "user/form/signup";
         }
 
         //중복 아이디 처리
         if(!userService.signup(user)){
             bindingResult.rejectValue("loginId", "exists.user.loginId", null);
-            return "form/signup";
+            return "user/form/signup";
         }
 
         //회원가입 성공
