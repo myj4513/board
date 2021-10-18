@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <script type="text/javascript">
+        function checkComment(){
+            var content = document.getElementById('content').value;
+            if(content === "") {
+                alert("내용을 입력해주세요.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+<header th:if="${isLoggedIn}">
+    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+</header>
+<header th:unless="${isLoggedIn}">
+    <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
+</header>
+
+<h1>Board</h1>
+
+<div th:object="${article}">
+    <div th:field="*{title}" th:text="*{title}"></div>
+    <div th:field="*{content}" th:text="*{content}"></div>
+    <div th:field="*{regDate}" th:text="*{regDate}"></div>
+    <div th:field="*{userId}" th:text="*{userId}"></div>
+    <div th:field="*{views}" th:text="*{views}"></div>
+    <div th:field="*{category}" th:text="*{category}"></div>
+</div>
+
+<div th:each="comment : ${comments}">
+    <span th:text="${comment.userId}"></span>
+    <span th:text="${comment.regDate}"></span>
+    <span th:text="${comment.content}"></span>
+</div>
+
+<form method="post" onsubmit="checkComment()">
+    <div th:object="${commentForm}">
+        <div>댓글 쓰기</div>
+        <input type="text" th:field="*{content}">
+        <input type="submit" value="등록">
+    </div>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+<h1>게 시 판</h1>
+
+<h4>글작성</h4>
+
+<div>
+  <input type="button" value="메인 페이지" th:onclick="|location.href='@{/}'|">
+  <input type="button" value="로그아웃" th:onclick="|location.href='@{/logout}'|">
+</div>
+
+<form method="post" th:object="${articleForm}">
+
+  <div>
+    <select th:field="*{category}" >
+      <option th:text="카테고리" th:value="카테고리" selected></option>
+      <option th:each="category : ${categories}" th:value="${category}" th:text="${category}">category name</option>
+    </select>
+    <input type="text" th:field="*{title}">
+  </div>
+  <div>
+    <textarea rows="30" cols="120" th:field="*{content}"></textarea>
+  </div>
+  <div><input type="submit" value="등록"> </div>
+</form>
+
+
+
+</body>
+</html>

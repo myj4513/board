@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        function checkPassword(){
+            var password = document.getElementById('password').value;
+            var passwordCheck = document.getElementById('passwordCheck').value;
+
+            if(password !== passwordCheck){
+                document.getElementById('passwordCheckMessage').innerHTML="비밀번호가 일치하지 않습니다.";
+            }
+            else{
+                document.getElementById('passwordCheckMessage').innerHTML="";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<h1>게 시 판</h1>
+
+<h4>회원 가입</h4>
+
+<form th:object="${user}" method="post">
+    <table>
+        <tr>
+            <td> 아이디 </td>
+            <td> <input type="text" th:field="*{loginId}" th:errorclass="field-error"> </td>
+            <td> <div class="field-error" th:errors="*{loginId}"></div> </td>
+        </tr>
+        <tr>
+            <td> 비밀번호 </td>
+            <td> <input type="password" th:field="*{password}" th:errorclass="field-error"> </td>
+            <td> <div class="field-error" th:errors="*{password}"></div> </td>
+        </tr>
+        <tr>
+            <td> 비밀번호 확인 </td>
+            <td> <input type="password" id="passwordCheck" name="passwordCheck" onchange="checkPassword()"> </td>
+            <td> <div id="passwordCheckMessage"></div></td>
+        </tr>
+        <tr>
+            <td> 이름 </td>
+            <td> <input type="text" th:field="*{name}" th:errorclass="field-error"> </td>
+            <td><div class="field-error" th:errors="*{name}"></div></td>
+        </tr>
+        <tr>
+            <td> 이메일 </td>
+            <td> <input type="email" th:field="*{email}" th:errorclass="field-error"> </td>
+            <td><div class="field-error" th:errors="*{email}"></div></td>
+        </tr>
+    </table>
+    <div>
+        <input type="submit" value="회원가입">
+        <input type="button" value="취소" th:onclick="|location.href='@{/}'|">
+    </div>
+</form>
+
+</body>
+</html>
