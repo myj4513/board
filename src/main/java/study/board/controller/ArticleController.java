@@ -11,16 +11,13 @@ import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.CommentForm;
 import study.board.dto.User;
+import study.board.service.ArticleLikesService;
 import study.board.service.ArticleService;
 import study.board.service.CommentService;
-import study.board.utils.Category;
+import study.board.enums.Category;
 import study.board.utils.SessionConst;
-import study.board.validation.CategoryValidator;
 
-import javax.websocket.Session;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -30,7 +27,7 @@ public class ArticleController {
 
     private final CommentService commentService;
     private final ArticleService articleService;
-    private final CategoryValidator categoryValidator;
+    private final ArticleLikesService articleLikesService;
 
     //글작성페이지 GET
     @GetMapping("/write")
@@ -41,9 +38,7 @@ public class ArticleController {
 
     //글작성페이지 POST
     @PostMapping("/write")
-    public String write(@Validated @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
-
-        categoryValidator.validate(articleForm, bindingResult);
+    public String write(@Validated @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
 
         if(bindingResult.hasErrors()){
             return "article/form/write";
@@ -54,15 +49,18 @@ public class ArticleController {
     }
 
     //글상세보기
-    @GetMapping("{id}")
-    public String article(@PathVariable int id, Model model){
+    @GetMapping("/{articleId}")
+    public String article(@PathVariable int articleId, Model model){
 
-        Optional<Article> article = articleService.findById(id);
+        Article article = articleService.findById(articleId);
 
-        if(article.isPresent()){
-            model.addAttribute("comments", commentService.findAllComments(id));
+        if(article!=null){
+            model.addAttribute("comments", commentService.findAllComments(articleId));
+            model.addAttribute("commentsCount", commentService.countComments(articleId));
             model.addAttribute("commentForm", new CommentForm());
-            model.addAttribute("article", article.get());
+            model.addAttribute("article", article);
+            model.addAttribute("likes", articleLikesService.countLikes(articleId));
+            model.addAttribute("dislikes", articleLikesService.countDislikes(articleId));
             return "article/article";
         } else{
             //article이 없는 경우
@@ -71,39 +69,52 @@ public class ArticleController {
 
     }
 
-    //글상세보기
-    @PostMapping("{id}")
-    public String addComment(@PathVariable int id, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
+    //댓글 작성하기
+    @PostMapping("/{articleId}/comment")
+    public String addComment(@PathVariable int articleId, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
 
-        Optional<Article> article = articleService.findById(id);
+        Article article = articleService.findById(articleId);
 
-        if(article.isPresent()){
-            model.addAttribute("article", article.get());
-            model.addAttribute("comments", commentService.findAllComments(id));
+        if(article!=null){
+            model.addAttribute("articleId", articleId);
+            model.addAttribute("article", article);
+            model.addAttribute("comments", commentService.findAllComments(articleId));
             model.addAttribute("commentForm", new CommentForm());
             if(bindingResult.hasErrors()){
                 return "article/article";
             }
 
             //작성된 댓글 등록
-            commentService.write(user.getId(), commentForm, id);
-            return "article/article";
+            commentService.write(user.getId(), commentForm, articleId);
+            return "redirect:/article/{articleId}";
 
         } else{
             //article이 없는 경우
+            //이 바인딩 리절트는 어디로 갈까? home으로 가니까 home에서 경고창을 띄어주는건가?
+            bindingResult.reject("notExists.article.write");
             return "redirect:/";
         }
 
     }
 
+    //article button likes
+    @GetMapping("/{articleId}/like")
+    public String articleLike(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+        //NullPointerException 발생, ServiceTest에선 이상 없음
+        articleLikesService.toggleLike(articleId, user.getId());
+        return "redirect:/article/{articleId}";
+    }
+
+
+
     @ModelAttribute("categories")
-    public List<String> categories(){
-        List<String> categories = new ArrayList<>();
+    public Map<Category, String> categories(){
+        Map<Category, String> map = new HashMap<>();
 
         for(Category c : Category.values()){
-            categories.add(c.name());
+            map.put(c, c.getCategoryName());
         }
 
-        return categories;
+        return map;
     }
 }

@@ -1,25 +1,20 @@
 package study.board.dto;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-
 @Getter @Setter
 @NoArgsConstructor
-public class Comment {
+public class ArticleLikes {
     private int id;
     private int articleId;
-    private String content;
-    private LocalDateTime regDate;
     private int userId;
+    private int likes;
 
-    public Comment(int articleId, String content, int userId){
+    public ArticleLikes(int articleId, int userId, int likes){
         this.articleId = articleId;
-        this.content = content;
         this.userId = userId;
+        this.likes = likes;
     }
 }

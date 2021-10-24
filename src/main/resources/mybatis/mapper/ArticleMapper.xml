@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study.board.mapper.ArticleMapper">
+    <insert id="add" parameterType="Article">
+        insert into article(title, content, user_id, category) values(#{title}, #{content}, #{userId}, #{category})
+    </insert>
+
+    <select id="findById" parameterType="int" resultType="Article">
+        select * from article where id=#{articleId}
+    </select>
+
+    <select id="findAll" resultType="Article">
+        select * from article;
+    </select>
+</mapper>

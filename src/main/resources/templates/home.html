@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function test(){
+            axios.get('/')
+            .then(function(response){
+                alert(response);
+            })
+        }
+    </script>
 </head>
 
 <header th:if="${isLoggedIn}">
@@ -13,7 +22,10 @@
 </header>
 
 <body>
+
 <h1>Board</h1>
+
+<input type="button" value="Ajax Prototype Test" id="btn" onclick="test()">
 
 <div>
     <input type="button" value="글 작성" th:onclick="|location.href='@{/article/write}'|">

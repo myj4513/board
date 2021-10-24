@@ -2,6 +2,7 @@ package study.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import study.board.enums.Category;
 
 import java.time.LocalDateTime;
 
@@ -15,15 +16,12 @@ public class Article {
     private LocalDateTime regDate;
     private int views;
     private int userId;
-    private String category;
+    private Category category;
 
-    public Article(ArticleForm articleForm){
+    public Article(ArticleForm articleForm, int userId){
         this.title = articleForm.getTitle();
         this.content = articleForm.getContent();
         this.category = articleForm.getCategory();
-    }
-
-    public void setUserId(int userId){
         this.userId = userId;
     }
 

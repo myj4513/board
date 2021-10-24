@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study.board.mapper.ArticleDislikesMapper">
+    <insert id="add">
+        insert into article_dislikes(article_id, user_id) values(#{articleId}, #{userId})
+    </insert>
+    <select id="getDislikes" resultType="integer">
+        select dislikes from article_dislikes where article_id=#{articleId} and user_id=#{userId}
+    </select>
+    <update id="toggle">
+        update article_dislikes set dislikes=#{dislikes} where article_id=#{articleId} and user_id=#{userId}
+    </update>
+    <select id="countDislikes" resultType="int">
+        select count(*) from article_dislikes where article_id=#{articleId} and dislikes=1
+    </select>
+</mapper>

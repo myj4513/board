@@ -7,6 +7,7 @@ import study.board.dto.Article;
 import study.board.dto.Comment;
 import study.board.dto.CommentForm;
 import study.board.dto.CommentView;
+import study.board.mapper.CommentMapper;
 
 import java.util.List;
 
@@ -14,14 +15,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final CommentDao commentDao;
+    private final CommentMapper commentMapper;
 
     public void write(int userId, CommentForm commentForm, int articleId){
-        commentDao.add(new Comment(articleId, commentForm.getContent(), userId));
+        commentMapper.add(new Comment(articleId, commentForm.getContent(), userId));
     }
 
     public List<CommentView> findAllComments(int articleId){
-        return commentDao.findAllByArticleId(articleId);
+        return commentMapper.findAllByArticleId(articleId);
+    }
+    public int countComments(int articleId){
+        return commentMapper.countComments(articleId);
     }
 
 }
