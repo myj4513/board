@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import study.board.dto.Article;
 import study.board.dto.ArticleView;
+import study.board.enums.Category;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -30,7 +31,7 @@ public class ArticleDao {
             pstmt.setString(1, article.getTitle());
             pstmt.setString(2, article.getContent());
             pstmt.setInt(3, article.getUserId());
-            pstmt.setString(4, article.getCategory());
+            pstmt.setString(4, article.getCategory().name());
 
             return pstmt.executeUpdate();
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class ArticleDao {
                         rs.getString(2), rs.getString(3),
                         rs.getTimestamp(4).toLocalDateTime(),
                         rs.getInt(5), rs.getInt(6),
-                        rs.getString(7));
+                        Category.valueOf(rs.getString(7)));
                 return Optional.of(article);
             }
             else{

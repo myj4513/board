@@ -3,16 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
-    <script type="text/javascript">
-        function checkComment(){
-            var content = document.getElementById('content').value;
-            if(content === "") {
-                alert("내용을 입력해주세요.");
-                return false;
-            }
-            return true;
-        }
-    </script>
 </head>
 <body>
 
@@ -33,19 +23,20 @@
     <div th:field="*{views}" th:text="*{views}"></div>
     <div th:field="*{category}" th:text="*{category}"></div>
 </div>
-
+<input type="button" value="like" th:onclick="|location.href='@{/article/{articleId}/like(articleId=${articleId})}'|">
+<span th:text="${likes}"></span>
+<input type="button" value="dislike" onclick="">
+<span th:text="${dislikes}"></span>
 <div th:each="comment : ${comments}">
     <span th:text="${comment.userId}"></span>
     <span th:text="${comment.regDate}"></span>
     <span th:text="${comment.content}"></span>
 </div>
 
-<form method="post" onsubmit="checkComment()">
-    <div th:object="${commentForm}">
-        <div>댓글 쓰기</div>
-        <input type="text" th:field="*{content}">
-        <input type="submit" value="등록">
-    </div>
+<form method="post" th:action="@{/article/{articleId}/comment(articleId=${articleId})}" th:object="${commentForm}">
+    <div>댓글 쓰기</div>
+    <input type="text" th:field="*{content}">
+    <input type="submit" value="등록">
 </form>
 
 </body>

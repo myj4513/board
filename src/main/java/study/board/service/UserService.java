@@ -1,42 +1,54 @@
 package study.board.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import study.board.dao.UserDao;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
+import study.board.exceptions.DuplicateLoginIdException;
+import study.board.mapper.UserMapper;
 import study.board.utils.SHA256;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserDao userDao;
+    private final UserMapper userMapper;
 
-    public boolean signup(User user) throws NoSuchAlgorithmException {
-        if(validateDuplicateLoginId(user.getLoginId())){
-            return false;
+    public void signup(User user) {  //리턴 boolean 수정 (예외로 다루자)
+        if(hasDuplicateLoginId(user.getLoginId())){//중복아이디로 인한 로그인 실패
+            throw new DuplicateLoginIdException();
         }
 
-        String encryptedPassword = SHA256.encrypt(user.getPassword());
-        user.setPassword(encryptedPassword);
-        userDao.add(user);
-        return true;
+        try{
+            String encryptedPassword = SHA256.encrypt(user.getPassword());
+            user.setPassword(encryptedPassword);
+            userMapper.add(user);
+        } catch (NoSuchAlgorithmException e) {
+            log.error("",e);
+        }
     }
 
-    private boolean validateDuplicateLoginId(String loginId){
-        return userDao.findByLoginId(loginId).isPresent();
+    private boolean hasDuplicateLoginId(String loginId){
+        return userMapper.findByLoginId(loginId)!=null;
     }
 
-    public User login(LoginForm loginForm) throws NoSuchAlgorithmException {
-        Optional<User> user = userDao.findByLoginId(loginForm.getLoginId());
-        if(user.isPresent()){
-            String encryptedPassword = SHA256.encrypt(loginForm.getPassword());
-            if(encryptedPassword.equals(user.get().getPassword())){
-                return user.get();
+    public User login(LoginForm loginForm) {
+        User user = userMapper.findByLoginId(loginForm.getLoginId());
+        if(user!=null){
+            try{
+                String encryptedPassword = SHA256.encrypt(loginForm.getPassword());
+                if(encryptedPassword.equals(user.getPassword())){
+                    return user;
+                }
+            } catch (NoSuchAlgorithmException e) {
+                log.error("error : {}", e);
             }
         }
         return null;

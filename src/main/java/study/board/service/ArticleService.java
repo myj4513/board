@@ -2,27 +2,22 @@ package study.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import study.board.dao.ArticleDao;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
-
-import java.util.Optional;
+import study.board.mapper.ArticleMapper;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
 
-    private final ArticleDao articleDao;
+    private final ArticleMapper articleMapper;
 
     public void write(ArticleForm articleForm , int userId) {
-
-        Article article = new Article(articleForm);
-        article.setUserId(userId);
-
-        articleDao.add(article);
+        Article article = new Article(articleForm, userId);
+        articleMapper.add(article);
     }
 
-    public Optional<Article> findById(int articleId) {
-        return articleDao.findById(articleId);
+    public Article findById(int articleId) {
+        return articleMapper.findById(articleId);
     }
 }

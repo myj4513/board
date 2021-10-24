@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.User;
+import study.board.exceptions.DuplicateLoginIdException;
 import study.board.service.UserService;
 
 import java.security.NoSuchAlgorithmException;
@@ -26,7 +27,7 @@ public class SignupController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Validated @ModelAttribute User user, BindingResult bindingResult) throws NoSuchAlgorithmException {
+    public String signup(@Validated @ModelAttribute User user, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
             log.info("error : {}", bindingResult);
@@ -34,7 +35,10 @@ public class SignupController {
         }
 
         //중복 아이디 처리
-        if(!userService.signup(user)){
+        try{
+            userService.signup(user);
+        } catch(DuplicateLoginIdException e){
+            log.error("error : {}", e);
             bindingResult.rejectValue("loginId", "exists.user.loginId", null);
             return "user/form/signup";
         }

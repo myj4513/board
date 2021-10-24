@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import study.board.enums.Category;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,6 @@ public class ArticleForm {
     @NotBlank
     private String content;
     @NotNull
-    private String category;
+    private Category category;
 
 }
