@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import study.board.dao.ArticleDao;
+import study.board.dto.Article;
 import study.board.dto.ArticleView;
+import study.board.mapper.ArticleMapper;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final ArticleDao articleDao;  //릴레이 메서드로 수정하세요
+    private final ArticleMapper articleMapper;
 
     @GetMapping("/")
     public String homeLogin(){
@@ -25,7 +27,9 @@ public class HomeController {
 
     @ModelAttribute("articles")
     public List<ArticleView> articles(){
-        List<ArticleView> articles = articleDao.findAll();
+        List<Article> articles = articleMapper.findAll();
+        //이부분도 수정하자
+//        findAll을 Article이 아닌 ArticleView로 변경해야함
         return articles;
     }
 }

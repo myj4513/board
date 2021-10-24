@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
+import study.board.exceptions.NoArticleFoundException;
 import study.board.mapper.ArticleMapper;
 
 @Service
@@ -18,6 +19,9 @@ public class ArticleService {
     }
 
     public Article findById(int articleId) {
-        return articleMapper.findById(articleId);
+        Article article = articleMapper.findById(articleId);
+
+        if(article==null) throw new NoArticleFoundException();
+        return article;
     }
 }

@@ -11,6 +11,7 @@ import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.CommentForm;
 import study.board.dto.User;
+import study.board.exceptions.NoArticleFoundException;
 import study.board.service.ArticleLikesService;
 import study.board.service.ArticleService;
 import study.board.service.CommentService;
@@ -73,13 +74,14 @@ public class ArticleController {
     @PostMapping("/{articleId}/comment")
     public String addComment(@PathVariable int articleId, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
 
-        Article article = articleService.findById(articleId);
+        try{
+            Article article = articleService.findById(articleId);
 
-        if(article!=null){
             model.addAttribute("articleId", articleId);
             model.addAttribute("article", article);
             model.addAttribute("comments", commentService.findAllComments(articleId));
             model.addAttribute("commentForm", new CommentForm());
+
             if(bindingResult.hasErrors()){
                 return "article/article";
             }
@@ -87,19 +89,16 @@ public class ArticleController {
             //작성된 댓글 등록
             commentService.write(user.getId(), commentForm, articleId);
             return "redirect:/article/{articleId}";
-
-        } else{
-            //article이 없는 경우
-            //이 바인딩 리절트는 어디로 갈까? home으로 가니까 home에서 경고창을 띄어주는건가?
-            bindingResult.reject("notExists.article.write");
+        } catch (NoArticleFoundException e){
+            log.error(e.getMessage());
+            //어떤 처리를 해주어야 할까?
             return "redirect:/";
         }
-
     }
 
     //article button likes
     @GetMapping("/{articleId}/like")
-    public String articleLike(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user){
+    public String articleLike(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         //NullPointerException 발생, ServiceTest에선 이상 없음
         articleLikesService.toggleLike(articleId, user.getId());
         return "redirect:/article/{articleId}";
