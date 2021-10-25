@@ -37,4 +37,11 @@ class UserMapperTest {
         log.info("email: {}", user.getEmail());
 
     }
+
+    @Test
+    void test(){
+        int a = -1/10;
+        int b = 1/10;
+        log.info("a: {}, b : {}",a, b);
+    }
 }

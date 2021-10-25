@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        function test(){
-            axios.get('/')
-            .then(function(response){
-                alert(response);
-            })
+        function movePage(){
+            const sortBy = document.getElementById("sortBy").value;
+            const category = document.getElementById("category").value;
+            location.href="/?sortBy="+sortBy+"&category="+category;
         }
     </script>
 </head>
@@ -25,7 +23,13 @@
 
 <h1>Board</h1>
 
-<input type="button" value="Ajax Prototype Test" id="btn" onclick="test()">
+<select id="sortBy" onchange="movePage()">
+    <option th:each="sortBy : ${SortBy}" th:value="${sortBy}" th:selected="${sortBy.displayValue} == ${currSortBy.displayValue}" th:text="${sortBy.displayValue}">category name</option>
+</select>
+
+<select id="category" onchange="movePage()">
+    <option th:each="category : ${Categories}" th:value="${category}" th:selected="${category.displayValue} == ${currCategory.displayValue}" th:text="${category.displayValue}">category name</option>
+</select>
 
 <div>
     <input type="button" value="글 작성" th:onclick="|location.href='@{/article/write}'|">
@@ -41,6 +45,8 @@
         <td><a th:href="|/article/${article.id}|" th:text="${article.regDate}"></a></td>
     </tr>
 </table>
+
+<span th:text="${totalPages}"></span>
 
 </body>
 </html>

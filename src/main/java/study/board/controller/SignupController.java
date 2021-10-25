@@ -30,7 +30,6 @@ public class SignupController {
     public String signup(@Validated @ModelAttribute User user, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
-            log.info("error : {}", bindingResult);
             return "user/form/signup";
         }
 
@@ -38,7 +37,6 @@ public class SignupController {
         try{
             userService.signup(user);
         } catch(DuplicateLoginIdException e){
-            log.error("error : {}", e);
             bindingResult.rejectValue("loginId", "exists.user.loginId", null);
             return "user/form/signup";
         }

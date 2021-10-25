@@ -11,10 +11,5 @@ public class ArticleLikes {
     private int articleId;
     private int userId;
     private int likes;
-
-    public ArticleLikes(int articleId, int userId, int likes){
-        this.articleId = articleId;
-        this.userId = userId;
-        this.likes = likes;
-    }
+    private int dislikes;
 }

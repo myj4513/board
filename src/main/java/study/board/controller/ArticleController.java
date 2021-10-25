@@ -18,7 +18,6 @@ import study.board.service.CommentService;
 import study.board.enums.Category;
 import study.board.utils.SessionConst;
 
-import java.util.*;
 
 @Slf4j
 @Controller
@@ -53,9 +52,9 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String article(@PathVariable int articleId, Model model){
 
-        Article article = articleService.findById(articleId);
-
-        if(article!=null){
+        try{
+            Article article = articleService.findById(articleId);
+            articleService.addView(articleId);
             model.addAttribute("comments", commentService.findAllComments(articleId));
             model.addAttribute("commentsCount", commentService.countComments(articleId));
             model.addAttribute("commentForm", new CommentForm());
@@ -63,11 +62,11 @@ public class ArticleController {
             model.addAttribute("likes", articleLikesService.countLikes(articleId));
             model.addAttribute("dislikes", articleLikesService.countDislikes(articleId));
             return "article/article";
-        } else{
-            //article이 없는 경우
+        } catch (NoArticleFoundException e){
+            log.error(e.getMessage());
+            //어떤 처리를 해주어야 할까?
             return "redirect:/";
         }
-
     }
 
     //댓글 작성하기
@@ -97,23 +96,21 @@ public class ArticleController {
     }
 
     //article button likes
-    @GetMapping("/{articleId}/like")
-    public String articleLike(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
-        //NullPointerException 발생, ServiceTest에선 이상 없음
+    @GetMapping("/{articleId}/likes")
+    public String articleLikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         articleLikesService.toggleLike(articleId, user.getId());
         return "redirect:/article/{articleId}";
     }
 
-
+    //article button dislikes
+    @GetMapping("/{articleId}/dislikes")
+    public String articleDislikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
+        articleLikesService.toggleDislikes(articleId, user.getId());
+        return "redirect:/article/{articleId}";
+    }
 
     @ModelAttribute("categories")
-    public Map<Category, String> categories(){
-        Map<Category, String> map = new HashMap<>();
-
-        for(Category c : Category.values()){
-            map.put(c, c.getCategoryName());
-        }
-
-        return map;
+    public Category[] categories(){
+        return Category.values();
     }
 }

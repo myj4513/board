@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import study.board.exceptions.EncryptionException;
+import study.board.exceptions.WrongLoginDataException;
 import study.board.utils.SessionConst;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
@@ -36,19 +38,18 @@ public class LoginController {
             return "user/form/login";
         }
 
-
-        User loginUser = userService.login(loginForm);
-
-        //로그인 실패
-        if (loginUser==null){
-            bindingResult.reject("wrong.loginForm");
+        try{
+            User loginUser = userService.login(loginForm);
+            HttpSession session = request.getSession();
+            session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+            return "redirect:"+redirectURL;
+        } catch(EncryptionException e){
+            bindingResult.reject("encryption", e.getMessage());
+            return "user/form/login";
+        } catch(WrongLoginDataException e){
+            bindingResult.reject("wrong.loginForm", e.getMessage());
             return "user/form/login";
         }
-
-        //로그인 성공, 쿠키 생성
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
-        return "redirect:"+redirectURL;
     }
 
     @GetMapping("/logout")

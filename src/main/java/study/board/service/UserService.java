@@ -2,9 +2,7 @@ package study.board.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import study.board.dao.UserDao;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
 import study.board.exceptions.DuplicateLoginIdException;
@@ -14,7 +12,6 @@ import study.board.mapper.UserMapper;
 import study.board.utils.SHA256;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
 
 @Slf4j
 @Service

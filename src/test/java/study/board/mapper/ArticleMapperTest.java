@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
+import study.board.dto.ArticleView;
 import study.board.enums.Category;
 
 import java.util.List;
@@ -40,15 +41,11 @@ class ArticleMapperTest {
 
     @Test
     void findAll(){
-        List<Article> articles = articleMapper.findAll();
-        for(Article a : articles){
+        List<ArticleView> articles = articleMapper.findNext10From(0);
+        for(ArticleView a : articles){
             log.info("id: {}", a.getId());
             log.info("title: {}", a.getTitle());
-            log.info("content: {}", a.getContent());
             log.info("regDate: {}", a.getRegDate());
-            log.info("views: {}", a.getViews());
-            log.info("userId: {}", a.getUserId());
-            log.info("category: {}", a.getCategory());
         }
     }
 }

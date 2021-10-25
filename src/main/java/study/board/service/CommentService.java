@@ -2,8 +2,6 @@ package study.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import study.board.dao.CommentDao;
-import study.board.dto.Article;
 import study.board.dto.Comment;
 import study.board.dto.CommentForm;
 import study.board.dto.CommentView;
