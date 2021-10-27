@@ -11,9 +11,6 @@ import study.board.enums.Category;
 import study.board.enums.SortBy;
 import study.board.service.ArticleService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor

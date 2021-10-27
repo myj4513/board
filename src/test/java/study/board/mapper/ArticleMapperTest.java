@@ -41,11 +41,11 @@ class ArticleMapperTest {
 
     @Test
     void findAll(){
-        List<ArticleView> articles = articleMapper.findNext10From(0);
-        for(ArticleView a : articles){
-            log.info("id: {}", a.getId());
-            log.info("title: {}", a.getTitle());
-            log.info("regDate: {}", a.getRegDate());
-        }
+//        List<ArticleView> articles = articleMapper.findNext10From(0);
+//        for(ArticleView a : articles){
+//            log.info("id: {}", a.getId());
+//            log.info("title: {}", a.getTitle());
+//            log.info("regDate: {}", a.getRegDate());
+//        }
     }
 }

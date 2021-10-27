@@ -8,7 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface CommentMapper {
-
     public void add(Comment comment);
     public List<CommentView> findAllByArticleId(int articleId);
     public int countComments(int articleId);

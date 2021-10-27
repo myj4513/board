@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @AllArgsConstructor
 public class CommentView {
-    private int userId;
+    private int id;
+    private String username;
     private String content;
     private LocalDateTime regDate;
+    private int likes;
+    private int dislikes;
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         function checkPassword(){
             var password = document.getElementById('password').value;
@@ -23,17 +24,17 @@
 
 <h4>회원 가입</h4>
 
-<form th:object="${user}" method="post">
+<form th:object="${user}" method="post" onsubmit="signup(event)">
     <table>
         <tr>
             <td> 아이디 </td>
             <td> <input type="text" th:field="*{loginId}" th:errorclass="field-error"> </td>
-            <td> <div class="field-error" th:errors="*{loginId}"></div> </td>
+            <td> <div class="loginId-error"></div> </td>
         </tr>
         <tr>
             <td> 비밀번호 </td>
             <td> <input type="password" th:field="*{password}" th:errorclass="field-error"> </td>
-            <td> <div class="field-error" th:errors="*{password}"></div> </td>
+            <td> <div class="password-error"></div> </td>
         </tr>
         <tr>
             <td> 비밀번호 확인 </td>
@@ -43,12 +44,12 @@
         <tr>
             <td> 이름 </td>
             <td> <input type="text" th:field="*{name}" th:errorclass="field-error"> </td>
-            <td><div class="field-error" th:errors="*{name}"></div></td>
+            <td><div class="name-error"></div></td>
         </tr>
         <tr>
             <td> 이메일 </td>
             <td> <input type="email" th:field="*{email}" th:errorclass="field-error"> </td>
-            <td><div class="field-error" th:errors="*{email}"></div></td>
+            <td><div class="email-error"></div></td>
         </tr>
     </table>
     <div>
@@ -56,6 +57,36 @@
         <input type="button" value="취소" th:onclick="|location.href='@{/}'|">
     </div>
 </form>
-
 </body>
+<script>
+    function signup(e){
+        e.preventDefault();
+
+        const loginId =document.getElementById('loginId').value;
+        const password = document.getElementById("password").value;
+        const name = document.querySelector('#name').value;
+        const email = document.querySelector("#email").value;
+
+        axios.post("/api/signup", {"loginId": loginId, "password": password, "name": name, "email": email})
+        .then(response =>{
+            window.location="/login";
+        })
+        .catch(error => {
+            const data = error.response.data;
+            console.log(data);
+            if(data.loginId!=undefined){
+                document.querySelector('.loginId-error').innerHTML = data.loginId;
+            }
+            if(data.password!=undefined){
+                document.querySelector('.password-error').innerHTML = data.password;
+            }
+            if(data.name!=undefined){
+                document.querySelector('.name-error').innerHTML = data.name;
+            }
+            if(data.email!=undefined){
+                document.querySelector('.email-error').innerHTML = data.email;
+            }
+        })
+    }
+</script>
 </html>

@@ -3,6 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin:0 auto;
+            width:50%;
+        }
+        .article{
+            display: flex;
+            flex-direction: column;
+            width:100%
+        }
+        .article .titleRegDate{
+            display:flex;
+            justify-content: space-between;
+        }
+        .article .userNameViewsLikes{
+            display: flex;
+            justify-content: space-between;
+        }
+        .article .content{
+            min-height: 400px;
+        }
+        .articleLikes{
+            width:100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+        #title{
+            margin-bottom: 20px;
+
+        }
+        .article .comment{
+            display:flex;
+            flex-direction: column;
+        }
+        .article .comment .comment-info{
+            display: flex;
+            justify-content: space-between;
+        }
+        .comment-count{
+            margin:15px;
+        }
+        .article .writeComment{
+            border: 1px solid black;
+            padding: 10px;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+        }
+        .article .writeComment .comment-content{
+            display: flex;
+            justify-content: space-between;
+        }
+        .article .writeComment .comment-content textarea{
+            width:91%;
+        }
+        .article .writeComment .submit{
+            width: 7%;
+        }
+        a{
+            text-decoration: none;
+            font-size: 40px;
+        }
+        .line{
+            border-top : 1px solid black;
+            margin: 5px 0px;
+        }
+    </style>
 </head>
 <body>
 
@@ -13,31 +85,69 @@
     <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
 </header>
 
-<h1>Board</h1>
+<div id="title" ><a href="/">Board</a></div>
 
-<div th:object="${article}">
-    <div th:field="*{title}" th:text="*{title}"></div>
-    <div th:field="*{content}" th:text="*{content}"></div>
-    <div th:field="*{regDate}" th:text="*{regDate}"></div>
-    <div th:field="*{userId}" th:text="*{userId}"></div>
-    <div th:field="*{views}" th:text="*{views}"></div>
-    <div th:field="*{category}" th:text="*{category}"></div>
+<div th:object="${article}" class="article">
+    <div class="line"></div>
+    <div class="titleRegDate">
+        <div th:field="*{title}" th:text="*{title}">title</div>
+        <div th:field="*{regDate}" th:text="*{regDate}">regdate</div>
+    </div>
+    <div class="line"></div>
+    <div class="userNameViewsLikes">
+        <div th:text="${writerName}">writerName</div>
+        <div class="viewsLikes">
+            Views <span th:field="*{views}" th:text="*{views}">views</span>
+            Likes <span th:field="${likes}" th:text="${likes}">Likes</span>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="content">
+        <div th:field="*{content}" th:text="*{content}">content</div>
+    </div>
+
+    <div class="articleLikes">
+        <div class="likes">
+            <input type="button" value="좋아요" th:onclick="|location.href='@{/articles/{articleId}/likes(articleId=${articleId})}'|"></input>
+            <span th:text="${likes}">12</span>
+        </div>
+        <input type="button" value="목록으로" onclick="location.href='/'">
+        <div class="dislikes">
+            <input type="button" value="싫어요" th:onclick="|location.href='@{/articles/{articleId}/dislikes(articleId=${articleId})}'|"></input>
+            <span th:text="${dislikes}">3</span>
+        </div>
+    </div>
+    <div class="line"></div>
+
+    <div class="comment-count">
+        Comments <span th:text="${commentsCount}">7</span>
+    </div>
+    <div class="line"></div>
+
+    <div th:each="comment : ${comments}" class="comment">
+        <div class="comment-info">
+            <div class="userNameRegDate">
+                <span th:text="${comment.username}">username</span>
+                <span th:text="${comment.regDate}">regdate</span>
+            </div>
+            <div class="likesDislikes">
+                <input type="button" value="likes" th:onclick="|location.href='@{/articles/{articleId}/comment/{commentId}/likes(articleId=${articleId}, commentId=${comment.Id})}'|">
+                <span th:text="${comment.likes}">likes</span>
+                <input type="button" value="dislikes" th:onclick="|location.href='@{/articles/{articleId}/comment/{commentId}/dislikes(articleId=${articleId}, commentId=${comment.Id})}'|">
+                <span th:text="${comment.dislikes}">dislikes</span>
+            </div>
+        </div>
+        <div th:text="${comment.content}">content</div>
+        <div class="line"></div>
+    </div>
+
+    <form method="post" th:action="@{/articles/{articleId}/comment(articleId=${articleId})}" th:object="${commentForm}" class="writeComment">
+        <div>댓글 쓰기</div>
+        <div class="comment-content">
+            <textarea th:field="*{content}" ></textarea>
+            <input type="submit" value="등록" class="submit">
+        </div>
+    </form>
 </div>
-<input type="button" value="like" th:onclick="|location.href='@{/article/{articleId}/likes(articleId=${articleId})}'|">
-<span th:text="${likes}"></span>
-<input type="button" value="dislike" th:onclick="|location.href='@{/article/{articleId}/dislikes(articleId=${articleId})}'|">
-<span th:text="${dislikes}"></span>
-<div th:each="comment : ${comments}">
-    <span th:text="${comment.userId}"></span>
-    <span th:text="${comment.regDate}"></span>
-    <span th:text="${comment.content}"></span>
-</div>
-
-<form method="post" th:action="@{/article/{articleId}/comment(articleId=${articleId})}" th:object="${commentForm}">
-    <div>댓글 쓰기</div>
-    <input type="text" th:field="*{content}">
-    <input type="submit" value="등록">
-</form>
-
 </body>
 </html>

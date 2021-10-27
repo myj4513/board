@@ -54,4 +54,8 @@ public class UserService {
         }
         return user;
     }
+
+    public String getWriterNameById(int userId){
+        return userMapper.getNameById(userId);
+    }
 }

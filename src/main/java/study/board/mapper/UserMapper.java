@@ -9,4 +9,5 @@ public interface UserMapper {
     public User findById(int userId);
     public void add(User user);
     public User findByLoginId(String userLoginId);
+    public String getNameById(int id);
 }

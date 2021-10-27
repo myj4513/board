@@ -37,10 +37,13 @@ public class ArticleService {
         List<ArticleView> articles = new ArrayList<>();
         if(category==Category.ALL){
             if(sortBy==SortBy.VIEWS){
-                articles = articleMapper.findNext10OrderByViews(sArticleNum, category.name());
+                articles = articleMapper.findNext10OrderByViews(sArticleNum);
             }
             if(sortBy==SortBy.LATEST){
-                articles = articleMapper.findNext10OrderByRegDate(sArticleNum, category.name());
+                articles = articleMapper.findNext10OrderByRegDate(sArticleNum);
+            }
+            if(sortBy==SortBy.LIKES){
+                articles = articleMapper.findNext10OrderByLikes(sArticleNum);
             }
             return articles;
         }
@@ -49,6 +52,9 @@ public class ArticleService {
         }
         if(sortBy==SortBy.LATEST){
             articles = articleMapper.findNext10WithCategoryOrderByRegDate(sArticleNum, category.name());
+        }
+        if(sortBy==SortBy.LIKES){
+            articles = articleMapper.findNext10WithCategoryOrderByLikes(sArticleNum, category.name());
         }
         return articles;
     }

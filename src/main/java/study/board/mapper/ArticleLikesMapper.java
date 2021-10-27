@@ -1,8 +1,10 @@
 package study.board.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import study.board.dto.ArticleLikes;
 
+@Mapper
 public interface ArticleLikesMapper {
     public ArticleLikes getLikes(@Param("articleId") int articleId, @Param("userId") int userId);
     public void addLikes(@Param("articleId") int articleId, @Param("userId") int userId);
