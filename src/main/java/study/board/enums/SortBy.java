@@ -1,11 +1,11 @@
 package study.board.enums;
 
-public enum Category {
-    ALL("전체"), DAILY("일상"), HUMOR("유머"), GAME("게임"), SPORTS("스포츠");
+public enum SortBy {
+    LATEST("최신순"), LIKES("인기순"), VIEWS("조회순");
 
     private final String displayValue;
 
-    Category(String displayValue) {
+    SortBy(String displayValue){
         this.displayValue = displayValue;
     }
 

@@ -12,7 +12,7 @@ public class GlobalControllerAdvice {
     @ModelAttribute("isLoggedIn")
     public boolean isLoggedIn(@SessionAttribute(name = SessionConst.LOGIN_USER, required = false)User user){
         if(user==null) return false;
-        else return true;
+        return true;
     }
 
     @ModelAttribute("currentUser")

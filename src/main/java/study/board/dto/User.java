@@ -13,14 +13,14 @@ import javax.validation.constraints.Size;
 public class User {
 
     private int id;
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 20, message = "최소 3자 이상, 20자 이하여야 합니다.")
     private String loginId;
-    @Size(min = 8, max = 20)
+    @Size(min = 8, max = 20, message = "최소 3자 이상, 20자 이하여야 합니다.")
     private String password;
-    @NotBlank
+    @NotBlank(message = "필수 입력란입니다.")
     private String name;
-    @NotBlank
-    @Email
+    @NotBlank(message = "필수 입력란입니다.")
+    @Email(message = "이메일 형식이여야 합니다.")
     private String email;
 
     public User(String loginId, String password, String name, String email){

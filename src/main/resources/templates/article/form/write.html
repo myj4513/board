@@ -20,9 +20,9 @@
        th:text="${err}">글로벌 오류 메시지</p>
   </div>
   <div>
-    <select th:field="*{category}" >
+    <select th:field="*{category}">
       <option th:text="카테고리" th:value="notSelected" selected></option>
-      <option th:each="category : ${categories}" th:value="${category.key}" th:text="${category.value}">category name</option>
+      <option th:each="category : ${categories}" th:value="${category}" th:text="${category.displayValue}">category name</option>
     </select>
     <input type="text" th:field="*{title}">
   </div>

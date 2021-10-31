@@ -13,4 +13,8 @@
     <select id="findByLoginId" parameterType="String" resultType="User">
         select * from user where loginid=#{loginid}
     </select>
+
+    <select id="getNameById" parameterType="int" resultType="String">
+        select name from user where id=#{id}
+    </select>
 </mapper>

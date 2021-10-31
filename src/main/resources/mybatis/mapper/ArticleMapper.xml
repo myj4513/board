@@ -11,7 +11,43 @@
         select * from article where id=#{articleId}
     </select>
 
-    <select id="findAll" resultType="Article">
-        select * from article;
+    <select id="findNext10From" resultType="ArticleView">
+        select id, title, regdate from article limit #{num}, 10
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from article;
+    </select>
+
+    <select id="getView" resultType="int">
+        select views from article where id=#{articleId}
+    </select>
+
+    <update id="addView">
+        update article set views=#{views} where id=#{articleId}
+    </update>
+
+    <select id="findNext10WithCategoryOrderByViews" resultType="ArticleView">
+        select id, title, regdate from article where category=#{category} order by views desc limit #{num}, 10
+    </select>
+
+    <select id="findNext10WithCategoryOrderByRegDate" resultType="ArticleView">
+        select id, title, regdate from article where category=#{category} order by regdate desc limit #{num}, 10
+    </select>
+
+    <select id="findNext10WithCategoryOrderByLikes" resultType="ArticleView">
+        select ar.id, ar.title, ar.regdate from (select article_id, count(likes) as cnt from article_likes where likes = 1 group by article_id) as ar_li join article as ar on ar.id = ar_li.article_id and ar.category=#{category} order by ar_li.cnt desc
+    </select>
+
+    <select id="findNext10OrderByViews" resultType="ArticleView">
+        select id, title, regdate from article order by views desc limit #{num}, 10
+    </select>
+
+    <select id="findNext10OrderByRegDate" resultType="ArticleView">
+        select id, title, regdate from article order by regdate desc limit #{num}, 10
+    </select>
+
+    <select id="findNext10OrderByLikes" resultType="ArticleView">
+        select ar.id, ar.title, ar.regdate from (select article_id, count(likes) as cnt from article_likes where likes = 1 group by article_id) as ar_li join article as ar on ar.id = ar_li.article_id order by ar_li.cnt desc
     </select>
 </mapper>

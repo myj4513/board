@@ -10,7 +10,7 @@
 
 <h4>로그인</h4>
 
-<form method="post" th:object="${loginForm}" onsubmit="return login()">
+<form method="post" th:object="${loginForm}" onsubmit="login(event)">
   <div th:if="${#fields.hasGlobalErrors()}">
     <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
   </div>
@@ -27,7 +27,7 @@
       <td> <div class="field-error" th:errors="*{password}">aaaa</div></td>
     </tr>
   </table>
-  <span id="error-messages"></span>
+  <div id="error-messages"></div>
   <div>
     <input type="submit" value="로그인">
     <input type="button" value="취소" th:onclick="|location.href='@{/}'|">
@@ -35,28 +35,27 @@
 </form>
 </body>
 <script>
-  function login(){
+  function login(e){
+    e.preventDefault();
     const loginId = document.querySelector('#loginId').value;
     const password = document.querySelector('#password').value;
-    let form = new FormData();
-    form.append('loginId', loginId);
-    form.append('password', password);
 
-    var result
-
-    axios.post('/ajax/login',  form, {
+    axios.post('/api/login', {"loginId" : loginId, "password" : password}, {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'}})
+        'Content-Type': 'application/json'}})
     .then(response => {
-      if(response.data=="WRONG"){
-        result = false;
-      } else if(response.data=="OK"){
-        result = true;
-      }
+      alert("success");
+      window.location="/";
+    })
+    .catch(error => {
+      var errorMessage = document.getElementById("error-messages");
+      var data = error.response.data;
+      var message = "";
+      if(data.loginId!=undefined) message += "<br/>" + data.loginId;
+      if(data.password!=undefined) message += "<br/>" + data.password;
+      if(data.errMessage!=undefined) message += "<br/>" + data.errMessage;
+      errorMessage.innerHTML = message;
     });
-    return result;
-    // onsubmit에 대해 boolean을 반환하고자 하였으나, axios내에서 외부 변수를 읽지 못함.
-    // axios 내에서 return true/false; 가 적용되지 않음.
   }
 </script>
 </html>

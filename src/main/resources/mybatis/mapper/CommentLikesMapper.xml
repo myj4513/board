@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study.board.mapper.CommentLikesMapper">
+    <insert id="addLikes">
+        insert into comment_likes(user_id, comment_id) values(#{userId}, #{commentId})
+    </insert>
+
+    <select id="countLikes" parameterType="int" resultType="int">
+        select count(*) from comment_likes where comment_id=#{commentId} and likes=1
+    </select>
+
+    <select id="countDislikes" parameterType="int" resultType="int">
+        select count(*) from comment_likes where comment_id=#{commentId} and dislikes=1
+    </select>
+
+    <select id="getLikes" resultType="CommentLikes">
+        select * from comment_likes where user_id=#{userId} and comment_id=#{commentId}
+    </select>
+
+    <update id="updateLikes">
+        update comment_likes set likes=#{likes} where user_id=#{userId} and comment_id=#{commentId}
+    </update>
+
+    <update id="updateDislikes">
+        update comment_likes set dislikes=#{dislikes} where user_id=#{userId} and comment_id=#{commentId}
+    </update>
+</mapper>

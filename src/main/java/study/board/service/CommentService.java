@@ -2,8 +2,6 @@ package study.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import study.board.dao.CommentDao;
-import study.board.dto.Article;
 import study.board.dto.Comment;
 import study.board.dto.CommentForm;
 import study.board.dto.CommentView;
@@ -16,16 +14,13 @@ import java.util.List;
 public class CommentService {
 
     private final CommentMapper commentMapper;
-
     public void write(int userId, CommentForm commentForm, int articleId){
         commentMapper.add(new Comment(articleId, commentForm.getContent(), userId));
     }
-
     public List<CommentView> findAllComments(int articleId){
         return commentMapper.findAllByArticleId(articleId);
     }
     public int countComments(int articleId){
         return commentMapper.countComments(articleId);
     }
-
 }
