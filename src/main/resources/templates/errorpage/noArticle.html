@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시판</title>
+</head>
+
+<header th:if="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+</header>
+<header th:unless="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
+</header>
+
+<body>
+
+<h1>Board</h1>
+
+<h3>해당 게시물이 존재하지 않습니다.</h3>
+
+
+<input type="button" value="홈으로" th:onclick="|location.href='@{/}'|">
+
+
+
+</body>
+</html>

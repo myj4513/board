@@ -49,29 +49,25 @@ public class ArticleController {
     }
 
     //글상세보기
+    @ExceptionHandler(NoArticleFoundException.class)
     @GetMapping("/{articleId}")
     public String article(@PathVariable int articleId, Model model){
+        Article article = articleService.findById(articleId);
 
-        try{
-            Article article = articleService.findById(articleId);
-            articleService.addView(articleId); //조회수 +1
-            model.addAttribute("comments", commentService.findAllComments(articleId));
-            model.addAttribute("commentsCount", commentService.countComments(articleId));
-            model.addAttribute("commentForm", new CommentForm());
-            model.addAttribute("article", article);
-            model.addAttribute("writerName", userService.getWriterNameById(article.getUserId()));
-            model.addAttribute("likes", articleLikesService.countLikes(articleId));
-            model.addAttribute("dislikes", articleLikesService.countDislikes(articleId));
-            return "article/article";
-        } catch (NoArticleFoundException e){
-            log.error(e.getMessage());
-            //어떤 처리를 해주어야 할까?
-            return "redirect:/";
-        }
+        articleService.addView(articleId); //조회수 +1
+        model.addAttribute("comments", commentService.findAllComments(articleId));
+        model.addAttribute("commentsCount", commentService.countComments(articleId));
+        model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("article", article);
+        model.addAttribute("writerName", userService.getWriterNameById(article.getUserId()));
+        model.addAttribute("likes", articleLikesService.countLikes(articleId));
+        model.addAttribute("dislikes", articleLikesService.countDislikes(articleId));
+        return "article/article";
     }
 
     //댓글 작성하기
     @PostMapping("/{articleId}/comment")
+    @ExceptionHandler(NoArticleFoundException.class)
     public String addComment(@PathVariable int articleId, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
 
         try{
@@ -98,6 +94,7 @@ public class ArticleController {
 
     //article button likes
     @GetMapping("/{articleId}/likes")
+    @ExceptionHandler(NoArticleFoundException.class)
     public String articleLikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         articleLikesService.toggleLike(articleId, user.getId());
         return "redirect:/articles/{articleId}";
@@ -105,6 +102,7 @@ public class ArticleController {
 
     //article button dislikes
     @GetMapping("/{articleId}/dislikes")
+    @ExceptionHandler(NoArticleFoundException.class)
     public String articleDislikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         articleLikesService.toggleDislikes(articleId, user.getId());
         return "redirect:/articles/{articleId}";
@@ -112,12 +110,14 @@ public class ArticleController {
 
     //comment button likes
     @GetMapping("{articleId}/comment/{commentId}/likes")
+    @ExceptionHandler(NoArticleFoundException.class)
     public String commentLikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         commentLikesService.toggleLikes(user.getId(), commentId);
         return "redirect:/articles/{articleId}";
     }
     //comment button dislikes
     @GetMapping("{articleId}/comment/{commentId}/dislikes")
+    @ExceptionHandler(NoArticleFoundException.class)
     public String commentDislikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         commentLikesService.toggleDislikes(user.getId(), commentId);
         return "redirect:/articles/{articleId}";

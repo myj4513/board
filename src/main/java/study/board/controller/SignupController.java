@@ -8,10 +8,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.User;
-import study.board.exceptions.DuplicateLoginIdException;
+import study.board.exceptions.DuplicatedLoginIdException;
 import study.board.service.UserService;
-
-import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @Controller
@@ -36,7 +34,7 @@ public class SignupController {
         //중복 아이디 처리
         try{
             userService.signup(user);
-        } catch(DuplicateLoginIdException e){
+        } catch(DuplicatedLoginIdException e){
             bindingResult.rejectValue("loginId", "exists.user.loginId", null);
             return "user/form/signup";
         }
