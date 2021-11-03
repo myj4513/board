@@ -19,15 +19,15 @@
     <tr>
       <td> 아이디 </td>
       <td> <input type="text" th:field="*{loginId}" > </td>
-      <td> <div th:errors="*{loginId}">aaaa</div></td>
+      <td> <div class="loginId-error"></div> </td>
     </tr>
     <tr>
       <td> 비밀번호 </td>
       <td> <input type="password" th:field="*{password}" th:errorclass="field-error"> </td>
-      <td> <div class="field-error" th:errors="*{password}">aaaa</div></td>
+      <td> <div class="password-error"></div> </td>
     </tr>
   </table>
-  <div id="error-messages"></div>
+  <div class="error-message"></div>
   <div>
     <input type="submit" value="로그인">
     <input type="button" value="취소" th:onclick="|location.href='@{/}'|">
@@ -48,19 +48,27 @@
       window.location="/";
     })
     .catch(error => {
+      clearErrorMessage()
       console.log(error.response.data);
-      var errorMessage = document.getElementById("error-messages");
-      var data = error.response.data;
-      var message = "";
-      if(typeof data === 'string'){
-        message = data;
-      } else{
-        for(var i=0;i<data.length;i++){
-          message += data[i] + "<br/>";
+      const data = error.response.data;
+      console.log(data);
+      if(data.fieldErr!=undefined){
+        if(data.fieldErr.loginId!=undefined){
+          document.querySelector('.loginId-error').innerHTML = data.fieldErr.loginId;
+        }
+        if(data.fieldErr.password!=undefined){
+          document.querySelector('.password-error').innerHTML = data.fieldErr.password;
         }
       }
-      errorMessage.innerHTML = message;
+      if(data.message!=undefined){
+        document.querySelector('.error-message').innerHTML = data.message;
+      }
     });
+  }
+  function clearErrorMessage(){
+    document.querySelector('.loginId-error').innerHTML = "";
+    document.querySelector('.password-error').innerHTML = "";
+    document.querySelector('.error-message').innerHTML = "";
   }
 </script>
 </html>

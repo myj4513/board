@@ -72,7 +72,8 @@
             window.location="/login";
         })
         .catch(error => {
-            const data = error.response.data;
+            clearErrorMessage();
+            const data = error.response.data.fieldErr;
             console.log(data);
             if(data.loginId!=undefined){
                 document.querySelector('.loginId-error').innerHTML = data.loginId;
@@ -87,6 +88,12 @@
                 document.querySelector('.email-error').innerHTML = data.email;
             }
         })
+    }
+    function clearErrorMessage(){
+        document.querySelector('.loginId-error').innerHTML = "";
+        document.querySelector('.password-error').innerHTML = "";
+        document.querySelector('.name-error').innerHTML = "";
+        document.querySelector('.email-error').innerHTML = "";
     }
 </script>
 </html>

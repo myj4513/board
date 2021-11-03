@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
+import study.board.error.ErrorResponse;
+import study.board.error.FieldErrorResponse;
 import study.board.exceptions.EncryptionException;
 import study.board.exceptions.WrongLoginDataException;
 import study.board.service.UserService;
@@ -18,7 +20,6 @@ import study.board.utils.SessionConst;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -29,7 +30,7 @@ public class AjaxController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<List> login(@Validated @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request){
+    public ResponseEntity<FieldErrorResponse> login(@Validated @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request){
         if(bindingResult.hasErrors()){
             return ResponseEntityCreation.getResponseEntity(bindingResult); //메서드 분리 -> utils.ResponseEntityCreation.class
         }
@@ -42,7 +43,7 @@ public class AjaxController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<List> signup(@Validated @RequestBody User user, BindingResult bindingResult){
+    public ResponseEntity<FieldErrorResponse> signup(@Validated @RequestBody User user, BindingResult bindingResult){
         if(!CheckPasswordPattern.isValidPassword(user.getPassword())){
             bindingResult.rejectValue("password", "invalid.password", "비밀번호는 8자 이상, 대소문자, 특수기호, 숫자를 포함해야합니다.");
         }
@@ -57,12 +58,12 @@ public class AjaxController {
     }
 
     @ExceptionHandler(WrongLoginDataException.class)
-    public ResponseEntity<String> handleWrongLoginDataException(){
+    public ResponseEntity<ErrorResponse> handleWrongLoginDataException(){
         return ResponseEntityCreation.getSingleStringResponseEntity("아이디 혹은 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EncryptionException.class)
-    public ResponseEntity<String> handleEncryptionException(){
+    public ResponseEntity<ErrorResponse> handleEncryptionException(){
         return ResponseEntityCreation.getSingleStringResponseEntity("암호화 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
