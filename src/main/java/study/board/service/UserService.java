@@ -3,6 +3,7 @@ package study.board.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
 import study.board.exceptions.DuplicatedLoginIdException;
@@ -20,6 +21,7 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    @Transactional
     public void signup(User user) {  //리턴 boolean 수정 (예외로 다루자)
         if(hasDuplicateLoginId(user.getLoginId())){//중복아이디로 인한 로그인 실패
             throw new DuplicatedLoginIdException();

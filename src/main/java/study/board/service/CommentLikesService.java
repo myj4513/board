@@ -3,6 +3,7 @@ package study.board.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import study.board.dto.CommentLikes;
 import study.board.mapper.CommentLikesMapper;
 
@@ -20,6 +21,7 @@ public class CommentLikesService {
         commentLikesMapper.countDislikes(commentId);
     }
 
+    @Transactional
     public void toggleLikes(int userId, int commentId){
         if(hasLikes(userId, commentId)){
             CommentLikes likes = commentLikesMapper.getLikes(userId, commentId);
@@ -35,6 +37,7 @@ public class CommentLikesService {
         commentLikesMapper.updateLikes(userId, commentId, 1);
     }
 
+    @Transactional
     public void toggleDislikes(int userId, int commentId){
         if(hasLikes(userId, commentId)){
             CommentLikes likes = commentLikesMapper.getLikes(userId, commentId);
