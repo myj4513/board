@@ -12,13 +12,13 @@ import study.board.dto.User;
 import study.board.exceptions.EncryptionException;
 import study.board.exceptions.WrongLoginDataException;
 import study.board.service.UserService;
+import study.board.utils.CheckPasswordPattern;
 import study.board.utils.ResponseEntityCreation;
 import study.board.utils.SessionConst;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Slf4j
 @RestController
@@ -43,8 +43,8 @@ public class AjaxController {
 
     @PostMapping("/signup")
     public ResponseEntity<List> signup(@Validated @RequestBody User user, BindingResult bindingResult){
-        if(!checkPassword(user.getPassword())){
-            bindingResult.rejectValue("password", "invalid.password", "비밀번호는 ~~");
+        if(!CheckPasswordPattern.isValidPassword(user.getPassword())){
+            bindingResult.rejectValue("password", "invalid.password", "비밀번호는 8자 이상, 대소문자, 특수기호, 숫자를 포함해야합니다.");
         }
 
         if(bindingResult.hasErrors()){
@@ -64,10 +64,5 @@ public class AjaxController {
     @ExceptionHandler(EncryptionException.class)
     public ResponseEntity<String> handleEncryptionException(){
         return ResponseEntityCreation.getSingleStringResponseEntity("암호화 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    private boolean checkPassword(String password){
-        if(!Pattern.matches("[a-zA-Z0-9~!@#$%^&*()]{8,20}",password)) return false;
-        return true;
     }
 }
