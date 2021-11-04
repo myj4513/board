@@ -8,7 +8,8 @@
 
 <div th:fragment="loggedIn (userName)">
   <span th:text="${userName}">username</span>
-  <input type="button" value="로그아웃" th:onclick="|location.href='@{/logout}'|">
+    <input type="button" value="로그아웃" th:onclick="|location.href='@{/logout}'|">
+    <input type="button" value="마이페이지" th:onclick="|location.href='@{/mypage/info}'|">
 </div>
 
 <div th:fragment="notLoggedIn">

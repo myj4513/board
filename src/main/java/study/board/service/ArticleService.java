@@ -59,6 +59,10 @@ public class ArticleService {
         return articles;
     }
 
+    public List<ArticleView> getArticlesById(int pageNum, int userId){
+        int sArticleNum = (pageNum-1)*10;
+        return articleMapper.findArticlesById(sArticleNum, userId);
+    }
 
     public int getTotalPages(){
         int articleNum = articleMapper.count();

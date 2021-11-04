@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
+import study.board.dto.UserEditForm;
 import study.board.error.ErrorResponse;
 import study.board.error.FieldErrorResponse;
 import study.board.exceptions.EncryptionException;
@@ -17,6 +18,7 @@ import study.board.service.UserService;
 import study.board.utils.CheckPasswordPattern;
 import study.board.utils.ResponseEntityCreation;
 import study.board.utils.SessionConst;
+import study.board.utils.SessionControl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,6 +57,30 @@ public class AjaxController {
         userService.signup(user);
 
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
+    }
+
+    @PostMapping("/userInfo/edit")
+    public ResponseEntity<FieldErrorResponse> editUserInfo(@Validated @RequestBody UserEditForm userEditForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, HttpServletRequest request){
+        if(!CheckPasswordPattern.isValidPassword(userEditForm.getPassword())){
+            bindingResult.rejectValue("password", "invalid.password", "비밀번호는 8자 이상, 대소문자, 특수기호, 숫자를 포함해야합니다.");
+        }
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntityCreation.getResponseEntity(bindingResult);
+        }
+
+        userService.updateUserInfo(userEditForm, user);
+        user = userService.findUserById(user.getId());
+        request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
+
+        return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
+    }
+
+    @GetMapping("/user/withdrawal")
+    public ResponseEntity<ErrorResponse> withdrawal(@SessionAttribute(name = SessionConst.LOGIN_USER) User user, HttpServletRequest request){
+        SessionControl.invalidate(request);
+        userService.deleteUser(user);
+        return null;
     }
 
     @ExceptionHandler(WrongLoginDataException.class)

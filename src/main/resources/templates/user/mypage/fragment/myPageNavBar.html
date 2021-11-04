@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        div{
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+<div th:fragment="myPage-navBar">
+    <a th:href="|/mypage/info|">내 정보</a>
+    <a th:href="|/mypage/articles|">내 글</a>
+    <a th:href="|/mypage/comments|">내 댓글</a>
+</div>
+
+<table>
+    <tr>
+
+    </tr>
+</table>
+
+</body>
+</html>

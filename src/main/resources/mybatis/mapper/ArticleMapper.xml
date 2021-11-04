@@ -4,7 +4,9 @@
 
 <mapper namespace="study.board.mapper.ArticleMapper">
     <insert id="add" parameterType="Article">
-        insert into article(title, content, user_id, category) values(#{title}, #{content}, #{userId}, #{category})
+        insert into
+            article(title, content, user_id, category)
+            values(#{title}, #{content}, #{userId}, #{category})
     </insert>
 
     <select id="findById" parameterType="int" resultType="Article">
@@ -27,27 +29,59 @@
         update article set views=#{views} where id=#{articleId}
     </update>
 
+    <select id="findArticlesById" resultType="ArticleView">
+        select id, title, regdate from article
+        where user_id=#{userId}
+        limit #{num}, 10
+    </select>
+
     <select id="findNext10WithCategoryOrderByViews" resultType="ArticleView">
-        select id, title, regdate from article where category=#{category} order by views desc limit #{num}, 10
+        select id, title, regdate from article
+        where category=#{category}
+        order by views desc
+        limit #{num}, 10
     </select>
 
     <select id="findNext10WithCategoryOrderByRegDate" resultType="ArticleView">
-        select id, title, regdate from article where category=#{category} order by regdate desc limit #{num}, 10
+        select id, title, regdate from article
+        where category=#{category} order by regdate desc
+        limit #{num}, 10
     </select>
 
     <select id="findNext10WithCategoryOrderByLikes" resultType="ArticleView">
-        select ar.id, ar.title, ar.regdate from (select article_id, count(likes) as cnt from article_likes where likes = 1 group by article_id) as ar_li join article as ar on ar.id = ar_li.article_id and ar.category=#{category} order by ar_li.cnt desc
+        select ar.id, ar.title, ar.regdate
+        from (
+            select article_id, count(likes) as cnt
+            from article_likes
+            where likes = 1
+            group by article_id
+            ) as ar_li
+            join article as ar
+                on ar.id = ar_li.article_id and ar.category=#{category}
+        order by ar_li.cnt desc
     </select>
 
     <select id="findNext10OrderByViews" resultType="ArticleView">
-        select id, title, regdate from article order by views desc limit #{num}, 10
+        select id, title, regdate from article
+        order by views desc
+        limit #{num}, 10
     </select>
 
     <select id="findNext10OrderByRegDate" resultType="ArticleView">
-        select id, title, regdate from article order by regdate desc limit #{num}, 10
+        select id, title, regdate from article
+        order by regdate desc
+        limit #{num}, 10
     </select>
 
     <select id="findNext10OrderByLikes" resultType="ArticleView">
-        select ar.id, ar.title, ar.regdate from (select article_id, count(likes) as cnt from article_likes where likes = 1 group by article_id) as ar_li join article as ar on ar.id = ar_li.article_id order by ar_li.cnt desc
+        select ar.id, ar.title, ar.regdate
+        from (
+            select article_id, count(likes) as cnt
+            from article_likes
+            where likes = 1
+            group by article_id
+            ) as ar_li
+            join article as ar on ar.id = ar_li.article_id
+        order by ar_li.cnt desc
     </select>
 </mapper>

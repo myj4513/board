@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시판</title>
+  <script>
+    function movePage(){
+      const sortBy = document.getElementById("sortBy").value;
+      const category = document.getElementById("category").value;
+      location.href="/?sortBy="+sortBy+"&category="+category;
+    }
+  </script>
+</head>
+
+<header th:if="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+</header>
+<header th:unless="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
+</header>
+
+<body>
+
+<h1>Board</h1>
+
+<div th:replace="~{user/mypage/fragment/myPageNavBar :: myPage-navBar}"></div>
+
+<table>
+  <th>No.</th>
+  <th>Title</th>
+  <th></th>
+  <tr th:each="article : ${articles}">
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.id}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.title}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.regDate}"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

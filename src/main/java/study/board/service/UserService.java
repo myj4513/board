@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
+import study.board.dto.UserEditForm;
 import study.board.exceptions.DuplicatedLoginIdException;
 import study.board.exceptions.EncryptionException;
 import study.board.exceptions.WrongLoginDataException;
@@ -33,6 +34,7 @@ public class UserService {
             userMapper.add(user);
         } catch (NoSuchAlgorithmException e) {
             log.error("",e);
+            throw new EncryptionException();
         }
     }
 
@@ -57,7 +59,26 @@ public class UserService {
         return user;
     }
 
+    public User findUserById(int userId){
+        return userMapper.findById(userId);
+    }
+
+    public void updateUserInfo(UserEditForm userEditForm, User user){
+        try{
+            String encryptedPassword = SHA256.encrypt(userEditForm.getPassword());
+            userEditForm.setPassword(encryptedPassword);
+            userMapper.updateUserInfo(userEditForm.getPassword(), userEditForm.getName(), userEditForm.getEmail(), user.getId());
+        } catch (NoSuchAlgorithmException e) {
+            log.error("",e);
+            throw new EncryptionException();
+        }
+    }
+
     public String getWriterNameById(int userId){
         return userMapper.getNameById(userId);
+    }
+
+    public void deleteUser(User user) {
+        userMapper.deleteUserById(user.getId());
     }
 }
