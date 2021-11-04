@@ -30,4 +30,21 @@
     <select id="countComments" parameterType="int" resultType="int">
         select count(*) from comment where article_id=#{articleId}
     </select>
+
+    <select id="findByUserId" resultType="CommentMyPageView">
+        select ar.id as articleId, ar.category, c.content, ifnull(cnt, 0) as likes, c.regdate
+        from comment as c
+            left join article as ar
+                on c.article_id=ar.id
+            left join (
+                select count(likes) as cnt, comment_id
+                from comment_likes
+                where likes=1
+                group by comment_id
+                ) as cl
+                on c.id=cl.comment_id
+        where c.user_id=#{userId}
+        order by regdate desc
+        limit #{sLimit}, 10;
+    </select>
 </mapper>
