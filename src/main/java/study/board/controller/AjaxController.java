@@ -39,8 +39,7 @@ public class AjaxController {
         }
 
         User loginUser = userService.login(loginForm);
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+        request.getSession().setAttribute(SessionConst.LOGIN_USER, loginUser.getId());
 
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
@@ -61,7 +60,7 @@ public class AjaxController {
     }
 
     @PostMapping("/userInfo/edit")
-    public ResponseEntity<FieldErrorResponse> editUserInfo(@Validated @RequestBody UserEditForm userEditForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, HttpServletRequest request){
+    public ResponseEntity<FieldErrorResponse> editUserInfo(@Validated @RequestBody UserEditForm userEditForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, HttpServletRequest request){
         if(!CheckPasswordPattern.isValidPassword(userEditForm.getPassword())){
             bindingResult.rejectValue("password", "invalid.password", "비밀번호는 8자 이상, 대소문자, 특수기호, 숫자를 포함해야합니다.");
         }
@@ -70,33 +69,31 @@ public class AjaxController {
             return ResponseEntityCreation.getResponseEntity(bindingResult);
         }
 
-        userService.updateUserInfo(userEditForm, user);
-        user = userService.findUserById(user.getId());
-        request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
+        userService.updateUserInfo(userEditForm, userId);
 
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
     @GetMapping("/user/withdrawal")
-    public ResponseEntity<ErrorResponse> withdrawal(@SessionAttribute(name = SessionConst.LOGIN_USER) User user, HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> withdrawal(@SessionAttribute(name = SessionConst.LOGIN_USER) int userId, HttpServletRequest request){
         SessionControl.invalidate(request);
-        userService.deleteUser(user);
+        userService.deleteUser(userId);
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
     @GetMapping("/articles/{articleId}/delete")
-    public ResponseEntity<ErrorResponse> deleteArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
-        articleService.deleteArticle(articleId, user);
+    public ResponseEntity<ErrorResponse> deleteArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
+        articleService.deleteArticle(articleId, userId);
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
     @PostMapping("/articles/{articleId}/edit")
-    public ResponseEntity<FieldErrorResponse> editArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, @Validated @RequestBody ArticleForm articleForm, BindingResult bindingResult){
+    public ResponseEntity<FieldErrorResponse> editArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, @Validated @RequestBody ArticleForm articleForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return ResponseEntityCreation.getResponseEntity(bindingResult);
         }
 
-        articleService.editArticle(articleForm, articleId, user);
+        articleService.editArticle(articleForm, articleId, userId);
 
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }

@@ -19,7 +19,7 @@
     </select>
 
     <update id="updateUserInfo">
-        update user set password=#{password}, name=#{name}, email=#{email} where id=#{id}
+        update user set password=#{userEditForm.password}, name=#{userEditForm.name}, email=#{userEditForm.email} where id=#{id}
     </update>
 
     <delete id="deleteUserById">

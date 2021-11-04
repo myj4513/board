@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import study.board.dto.ArticleView;
 import study.board.dto.User;
 import study.board.service.ArticleService;
+import study.board.service.UserService;
 import study.board.utils.SessionConst;
 
 import java.util.List;
@@ -19,23 +20,25 @@ import java.util.List;
 public class UserController {
 
     private final ArticleService articleService;
+    private final UserService userService;
 
     @GetMapping("/info")
-    public String info(@SessionAttribute(name = SessionConst.LOGIN_USER) User user, Model model) {
-        model.addAttribute("user", user);
+    public String info(@SessionAttribute(name = SessionConst.LOGIN_USER) int userId, Model model) {
+
+        model.addAttribute("user", userService.findUserById(userId));
         return "user/mypage/info";
     }
 
     @GetMapping("/info/edit")
-    public String editInfo(@SessionAttribute(name = SessionConst.LOGIN_USER) User user, Model model){
-        model.addAttribute("user", user);
+    public String editInfo(@SessionAttribute(name = SessionConst.LOGIN_USER) int userId, Model model){
+        model.addAttribute("user", userService.findUserById(userId));
         return "user/mypage/form/editInfo";
     }
 
 
     @GetMapping("/articles")
-    public String article(@RequestParam(value = "page", defaultValue = "1") int page, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, Model model){
-        List<ArticleView> articlesById = articleService.getArticlesById(page, user.getId());
+    public String article(@RequestParam(value = "page", defaultValue = "1") int page, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, Model model){
+        List<ArticleView> articlesById = articleService.getArticlesById(page, userId);
         model.addAttribute("articles", articlesById);
         return "user/mypage/articles";
     }

@@ -63,11 +63,11 @@ public class UserService {
         return userMapper.findById(userId);
     }
 
-    public void updateUserInfo(UserEditForm userEditForm, User user){
+    public void updateUserInfo(UserEditForm userEditForm, int userId){
         try{
             String encryptedPassword = SHA256.encrypt(userEditForm.getPassword());
             userEditForm.setPassword(encryptedPassword);
-            userMapper.updateUserInfo(userEditForm.getPassword(), userEditForm.getName(), userEditForm.getEmail(), user.getId());
+            userMapper.updateUserInfo(userEditForm, userId);
         } catch (NoSuchAlgorithmException e) {
             log.error("",e);
             throw new EncryptionException();
@@ -78,7 +78,7 @@ public class UserService {
         return userMapper.getNameById(userId);
     }
 
-    public void deleteUser(User user) {
-        userMapper.deleteUserById(user.getId());
+    public void deleteUser(int userId) {
+        userMapper.deleteUserById(userId);
     }
 }

@@ -1,14 +1,11 @@
 package study.board.databaseconnection;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.Optional;
 
 @SpringBootTest
 public class DatabaseConnectionTest {

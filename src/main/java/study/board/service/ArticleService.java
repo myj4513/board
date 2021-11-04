@@ -81,22 +81,22 @@ public class ArticleService {
         return articleMapper.findById(articleId);
     }
 
-    public void deleteArticle(int articleId, User user) {
-        if(!hasAuthority(articleId, user)){
+    public void deleteArticle(int articleId, int userId) {
+        if(!hasAuthority(articleId, userId)){
             throw new NoAuthorityException();
         }
         articleMapper.deleteById(articleId);
     }
 
-    private boolean hasAuthority(int articleId, User user){
+    private boolean hasAuthority(int articleId, int userId){
         Article article = findArticleById(articleId);
-        if(article.getUserId()==user.getId())
+        if(article.getUserId()==userId)
             return true;
         return false;
     }
 
-    public void editArticle(ArticleForm articleForm, int articleId, User user) {
-        if(!hasAuthority(articleId, user)){
+    public void editArticle(ArticleForm articleForm, int articleId, int userId) {
+        if(!hasAuthority(articleId, userId)){
             throw new NoAuthorityException();
         }
         articleMapper.updateById(articleId, articleForm);

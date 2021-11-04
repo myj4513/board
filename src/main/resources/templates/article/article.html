@@ -88,7 +88,7 @@
 <body>
 
 <header th:if="${isLoggedIn}">
-    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${curUserName})}"></div>
 </header>
 <header th:unless="${isLoggedIn}">
     <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
@@ -96,7 +96,7 @@
 
 <div id="title" ><a href="/">Board</a></div>
 
-<div id="editButton" th:if="${isLoggedIn} and ${currentUser.id} eq ${article.userId}">
+<div id="editButton" th:if="${isLoggedIn} and ${curUserId} eq ${article.userId}">
     <input type="button" value="수정" th:onclick="|location.href='@{/articles/{articleId}/edit(articleId=${articleId})}'|">
     <input type="button" value="삭제" th:onclick="deleteArticle()">
 </div>
