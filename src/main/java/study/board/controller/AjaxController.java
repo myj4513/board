@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import study.board.dto.LoginForm;
-import study.board.dto.User;
-import study.board.dto.UserEditForm;
+import study.board.dto.*;
 import study.board.error.ErrorResponse;
 import study.board.error.FieldErrorResponse;
 import study.board.exceptions.EncryptionException;
+import study.board.exceptions.NoAuthorityException;
 import study.board.exceptions.WrongLoginDataException;
+import study.board.service.ArticleService;
 import study.board.service.UserService;
 import study.board.utils.CheckPasswordPattern;
 import study.board.utils.ResponseEntityCreation;
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
 public class AjaxController {
 
     private final UserService userService;
+    private final ArticleService articleService;
 
     @PostMapping("/login")
     public ResponseEntity<FieldErrorResponse> login(@Validated @RequestBody LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request){
@@ -80,7 +81,29 @@ public class AjaxController {
     public ResponseEntity<ErrorResponse> withdrawal(@SessionAttribute(name = SessionConst.LOGIN_USER) User user, HttpServletRequest request){
         SessionControl.invalidate(request);
         userService.deleteUser(user);
-        return null;
+        return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
+    }
+
+    @GetMapping("/articles/{articleId}/delete")
+    public ResponseEntity<ErrorResponse> deleteArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
+        articleService.deleteArticle(articleId, user);
+        return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
+    }
+
+    @PostMapping("/articles/{articleId}/edit")
+    public ResponseEntity<FieldErrorResponse> editArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, @Validated @RequestBody ArticleForm articleForm, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return ResponseEntityCreation.getResponseEntity(bindingResult);
+        }
+
+        articleService.editArticle(articleForm, articleId, user);
+
+        return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
+    }
+
+    @ExceptionHandler(NoAuthorityException.class)
+    public ResponseEntity<ErrorResponse> handleNoAuthorityException(){
+        return ResponseEntityCreation.getSingleStringResponseEntity("접근 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(WrongLoginDataException.class)

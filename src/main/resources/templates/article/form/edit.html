@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>게 시 판</h1>
+
+<h4>글작성</h4>
+
+<div>
+  <input type="button" value="메인 페이지" th:onclick="|location.href='@{/}'|">
+  <input type="button" value="로그아웃" th:onclick="|location.href='@{/logout}'|">
+</div>
+
+<form method="post" th:object="${article}" onsubmit="editArticle(event)">
+  <div>
+    <select th:field="*{category}">
+      <option th:text="카테고리" th:value="notSelected" selected></option>
+      <option th:each="category : ${categories}" th:value="${category}" th:text="${category.displayValue}">category name</option>
+    </select>
+    <input type="text" th:field="*{title}">
+  </div>
+  <div>
+    <textarea rows="30" cols="120" th:field="*{content}"></textarea>
+  </div>
+  <div>
+    <input type="submit" value="등록">
+    <input type="button" value="취소" th:onclick="|location.href='@{/articles/{articleId}(articleId=${articleId})}'|">
+  </div>
+</form>
+
+</body>
+<script>
+  function editArticle(e){
+
+    const title = document.querySelector('#title').value;
+    const content = document.querySelector('#content').value;
+    const category = document.querySelector('#category').value;
+
+    e.preventDefault();
+    axios.post("/api/articles/[[${articleId}]]/edit", {"title" : title, "content" : content, "category" : category})
+    .then(response=>{
+      window.location="/articles/[[${articleId}]]";
+    })
+    .catch(error=>{
+      const fieldErr = error.response.data.fieldErr;
+      if(fieldErr.title != undefined){
+        alert(fieldErr.title);
+      }
+      else if(fieldErr.content != undefined){
+        alert(fieldErr.content);
+      }
+      else if(fieldErr.category != undefined){
+        alert(fieldErr.category)
+      }
+    })
+  }
+</script>
+</html>

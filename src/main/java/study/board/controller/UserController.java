@@ -32,8 +32,6 @@ public class UserController {
         return "user/mypage/form/editInfo";
     }
 
-    @PostMapping("/info/edit")
-
 
     @GetMapping("/articles")
     public String article(@RequestParam(value = "page", defaultValue = "1") int page, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, Model model){

@@ -3,13 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>게시판</title>
-  <script>
-    function movePage(){
-      const sortBy = document.getElementById("sortBy").value;
-      const category = document.getElementById("category").value;
-      location.href="/?sortBy="+sortBy+"&category="+category;
-    }
-  </script>
 </head>
 
 <header th:if="${isLoggedIn}">
@@ -35,6 +28,5 @@
     <td><a th:href="|/articles/${article.id}|" th:text="${article.regDate}"></a></td>
   </tr>
 </table>
-
 </body>
 </html>

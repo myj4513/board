@@ -15,11 +15,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ArticleForm {
 
-    @NotBlank
+    @NotBlank(message = "제목을 입력하세요.")
     private String title;
-    @NotBlank
+    @NotBlank(message = "내용을 입력하세요.")
     private String content;
-    @NotNull
+    @NotNull(message = "카테고리를 선택해주세요.")
     private Category category;
 
 }

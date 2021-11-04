@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.ArticleView;
+import study.board.dto.User;
 import study.board.enums.Category;
 import study.board.enums.SortBy;
 import study.board.exceptions.NoArticleFoundException;
 import study.board.exceptions.NoArticlesException;
+import study.board.exceptions.NoAuthorityException;
 import study.board.mapper.ArticleMapper;
 
 import java.util.ArrayList;
@@ -73,5 +75,30 @@ public class ArticleService {
 
     public void addView(int articleId){
         articleMapper.addView(articleId, articleMapper.getView(articleId)+1);
+    }
+
+    public Article findArticleById(int articleId) {
+        return articleMapper.findById(articleId);
+    }
+
+    public void deleteArticle(int articleId, User user) {
+        if(!hasAuthority(articleId, user)){
+            throw new NoAuthorityException();
+        }
+        articleMapper.deleteById(articleId);
+    }
+
+    private boolean hasAuthority(int articleId, User user){
+        Article article = findArticleById(articleId);
+        if(article.getUserId()==user.getId())
+            return true;
+        return false;
+    }
+
+    public void editArticle(ArticleForm articleForm, int articleId, User user) {
+        if(!hasAuthority(articleId, user)){
+            throw new NoAuthorityException();
+        }
+        articleMapper.updateById(articleId, articleForm);
     }
 }

@@ -2,6 +2,7 @@ package study.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,9 +12,11 @@ import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.CommentForm;
 import study.board.dto.User;
+import study.board.error.FieldErrorResponse;
 import study.board.exceptions.NoArticleFoundException;
 import study.board.service.*;
 import study.board.enums.Category;
+import study.board.utils.ResponseEntityCreation;
 import study.board.utils.SessionConst;
 
 
@@ -109,18 +112,25 @@ public class ArticleController {
     }
 
     //comment button likes
-    @GetMapping("{articleId}/comment/{commentId}/likes")
+    @GetMapping("/{articleId}/comment/{commentId}/likes")
     @ExceptionHandler(NoArticleFoundException.class)
     public String commentLikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         commentLikesService.toggleLikes(user.getId(), commentId);
         return "redirect:/articles/{articleId}";
     }
     //comment button dislikes
-    @GetMapping("{articleId}/comment/{commentId}/dislikes")
+    @GetMapping("/{articleId}/comment/{commentId}/dislikes")
     @ExceptionHandler(NoArticleFoundException.class)
     public String commentDislikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
         commentLikesService.toggleDislikes(user.getId(), commentId);
         return "redirect:/articles/{articleId}";
+    }
+
+    @GetMapping("/{articleId}/edit")
+    public String editArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user, Model model){
+        model.addAttribute("article", articleService.findArticleById(articleId));
+
+        return "article/form/edit";
     }
 
     @ModelAttribute("categories")

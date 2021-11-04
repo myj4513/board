@@ -84,4 +84,11 @@
             join article as ar on ar.id = ar_li.article_id
         order by ar_li.cnt desc
     </select>
+    <delete id="deleteById">
+        delete from article where id=#{articleId}
+    </delete>
+
+    <update id="updateById">
+        update article set title=#{articleForm.title}, content=#{articleForm.content}, category=#{articleForm.category} where id=#{articleId}
+    </update>
 </mapper>
