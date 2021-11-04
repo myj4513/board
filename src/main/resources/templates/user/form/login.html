@@ -48,12 +48,17 @@
       window.location="/";
     })
     .catch(error => {
+      console.log(error.response.data);
       var errorMessage = document.getElementById("error-messages");
       var data = error.response.data;
       var message = "";
-      if(data.loginId!=undefined) message += "<br/>" + data.loginId;
-      if(data.password!=undefined) message += "<br/>" + data.password;
-      if(data.errMessage!=undefined) message += "<br/>" + data.errMessage;
+      if(typeof data === 'string'){
+        message = data;
+      } else{
+        for(var i=0;i<data.length;i++){
+          message += data[i] + "<br/>";
+        }
+      }
       errorMessage.innerHTML = message;
     });
   }

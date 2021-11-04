@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
-import study.board.exceptions.DuplicateLoginIdException;
+import study.board.exceptions.DuplicatedLoginIdException;
 import study.board.exceptions.EncryptionException;
 import study.board.exceptions.WrongLoginDataException;
 import study.board.mapper.UserMapper;
@@ -22,7 +22,7 @@ public class UserService {
 
     public void signup(User user) {  //리턴 boolean 수정 (예외로 다루자)
         if(hasDuplicateLoginId(user.getLoginId())){//중복아이디로 인한 로그인 실패
-            throw new DuplicateLoginIdException();
+            throw new DuplicatedLoginIdException();
         }
 
         try{
