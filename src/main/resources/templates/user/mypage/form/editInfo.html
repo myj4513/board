@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/javascript">
+    function checkPassword(){
+      var password = document.getElementById('password').value;
+      var passwordCheck = document.getElementById('passwordCheck').value;
+
+      if(password !== passwordCheck){
+        document.getElementById('passwordCheckMessage').innerHTML="비밀번호가 일치하지 않습니다.";
+      }
+      else{
+        document.getElementById('passwordCheckMessage').innerHTML="";
+      }
+    }
+  </script>
+</head>
+<body>
+
+<h1>게 시 판</h1>
+
+<h4>회원 가입</h4>
+
+<form th:object="${user}" method="post" onsubmit="editInfo(event)">
+  <table>
+    <tr>
+      <td> 아이디 </td>
+      <td> <input type="text" th:field="*{loginId}" disabled> </td>
+    </tr>
+    <tr>
+      <td> 비밀번호 </td>
+      <td> <input type="password" th:field="*{password}"> </td>
+      <td> <div class="password-error"></div> </td>
+    </tr>
+    <tr>
+      <td> 비밀번호 확인 </td>
+      <td> <input type="password" id="passwordCheck" name="passwordCheck" onchange="checkPassword()"> </td>
+      <td> <div id="passwordCheckMessage"></div></td>
+    </tr>
+    <tr>
+      <td> 이름 </td>
+      <td> <input type="text" th:field="*{name}"> </td>
+      <td><div class="name-error"></div></td>
+    </tr>
+    <tr>
+      <td> 이메일 </td>
+      <td> <input type="email" th:field="*{email}"> </td>
+      <td><div class="email-error"></div></td>
+    </tr>
+  </table>
+  <div>
+    <input type="submit" value="수정">
+    <input type="button" value="취소" th:onclick="|location.href='@{/mypage/info}'|">
+  </div>
+</form>
+</body>
+<script>
+  function editInfo(e){
+    e.preventDefault();
+
+    const password = document.querySelector("#password").value;
+    const name = document.querySelector("#name").value;
+    const email = document.querySelector("#email").value;
+
+    axios.post("/api/userInfo/edit", {"password" : password, "name" : name, "email" : email})
+    .then(response =>{
+      alert("회원 정보가 정상적으로 수정되었습니다.");
+      window.location="/mypage/info";
+    })
+    .catch(error =>{
+      clearErrorMessage();
+      const data = error.response.data.fieldErr;
+      console.log(data);
+      if(data.password!=undefined){
+        document.querySelector('.password-error').innerHTML = data.password;
+      }
+      if(data.name!=undefined){
+        document.querySelector('.name-error').innerHTML = data.name;
+      }
+      if(data.email!=undefined){
+        document.querySelector('.email-error').innerHTML = data.email;
+      }
+    })
+  }
+  function clearErrorMessage(){
+    document.querySelector('.password-error').innerHTML = "";
+    document.querySelector('.name-error').innerHTML = "";
+    document.querySelector('.email-error').innerHTML = "";
+  }
+</script>
+</html>

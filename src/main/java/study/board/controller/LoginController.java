@@ -15,9 +15,9 @@ import study.board.utils.SessionConst;
 import study.board.dto.LoginForm;
 import study.board.dto.User;
 import study.board.service.UserService;
+import study.board.utils.SessionControl;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 
 @Controller
@@ -40,8 +40,7 @@ public class LoginController {
 
         try{
             User loginUser = userService.login(loginForm);
-            HttpSession session = request.getSession();
-            session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+            request.getSession().setAttribute(SessionConst.LOGIN_USER, loginUser.getId());
             return "redirect:"+redirectURL;
         } catch(EncryptionException e){
             bindingResult.reject("encryption", e.getMessage());
@@ -54,10 +53,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
-        if(session!=null){
-            session.invalidate();
-        }
+        SessionControl.invalidate(request);
         return "redirect:/";
     }
 }

@@ -1,0 +1,60 @@
+<!DOCTYPE>
+<html html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin:0 auto;
+            width:50%;
+        }
+    </style>
+</head>
+<body>
+
+<header th:if="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navigationBar :: loggedIn (${curUserName})}"></div>
+</header>
+<header th:unless="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
+</header>
+
+<h1>Board</h1>
+
+<div th:replace="~{user/mypage/fragment/myPageNavBar :: myPage-navBar}"></div>
+
+<table>
+    <tr>
+        <td>아이디</td>
+        <td th:text="${user.loginId}">id</td>
+    </tr>
+    <tr>
+        <td>이름</td>
+        <td th:text="${user.name}">name</td>
+    </tr>
+    <tr>
+        <td>이메일</td>
+        <td th:text="${user.email}">e-mail</td>
+    </tr>
+</table>
+<div>
+    <input type="button" value="수정" th:onclick="|location.href='@{/mypage/info/edit}'|">
+    <input type="button" value="탈퇴" th:onclick="withdrawal()">
+</div>
+</body>
+<script>
+    function withdrawal(){
+        if(confirm("정말로 탈퇴하시겠습니까?")){
+            axios.get("/api/user/withdrawal")
+                .then(response=>{
+                    window.location="/";
+                })
+        }
+
+    }
+</script>
+</html>

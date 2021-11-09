@@ -17,4 +17,12 @@
     <select id="getNameById" parameterType="int" resultType="String">
         select name from user where id=#{id}
     </select>
+
+    <update id="updateUserInfo">
+        update user set password=#{userEditForm.password}, name=#{userEditForm.name}, email=#{userEditForm.email} where id=#{id}
+    </update>
+
+    <delete id="deleteUserById">
+        delete from user where id=#{userId}
+    </delete>
 </mapper>

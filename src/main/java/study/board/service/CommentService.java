@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.board.dto.Comment;
 import study.board.dto.CommentForm;
+import study.board.dto.CommentMyPageView;
 import study.board.dto.CommentView;
 import study.board.mapper.CommentMapper;
 
@@ -22,5 +23,10 @@ public class CommentService {
     }
     public int countComments(int articleId){
         return commentMapper.countComments(articleId);
+    }
+
+    public List<CommentMyPageView> findCommentsByUserId(int page, int userId) {
+        int sCommentNum = (page-1)*10;
+        return commentMapper.findByUserId(sCommentNum, userId);
     }
 }

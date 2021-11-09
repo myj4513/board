@@ -38,13 +38,13 @@ public class ArticleController {
 
     //글작성페이지 POST
     @PostMapping("/article/write")
-    public String write(@Validated @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
+    public String write(@Validated @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
 
         if(bindingResult.hasErrors()){
             return "article/form/write";
         }
 
-        articleService.write(articleForm, user.getId());
+        articleService.write(articleForm, userId);
         return "redirect:/";
     }
 
@@ -68,7 +68,7 @@ public class ArticleController {
     //댓글 작성하기
     @PostMapping("/{articleId}/comment")
     @ExceptionHandler(NoArticleFoundException.class)
-    public String addComment(@PathVariable int articleId, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) User user, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
+    public String addComment(@PathVariable int articleId, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) int userId, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
 
         try{
             Article article = articleService.findById(articleId);
@@ -83,7 +83,7 @@ public class ArticleController {
             }
 
             //작성된 댓글 등록
-            commentService.write(user.getId(), commentForm, articleId);
+            commentService.write(userId, commentForm, articleId);
             return "redirect:/articles/{articleId}";
         } catch (NoArticleFoundException e){
             log.error(e.getMessage());
@@ -95,32 +95,38 @@ public class ArticleController {
     //article button likes
     @GetMapping("/{articleId}/likes")
     @ExceptionHandler(NoArticleFoundException.class)
-    public String articleLikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
-        articleLikesService.toggleLike(articleId, user.getId());
+    public String articleLikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
+        articleLikesService.toggleLike(articleId, userId);
         return "redirect:/articles/{articleId}";
     }
 
     //article button dislikes
     @GetMapping("/{articleId}/dislikes")
     @ExceptionHandler(NoArticleFoundException.class)
-    public String articleDislikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
-        articleLikesService.toggleDislikes(articleId, user.getId());
+    public String articleDislikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
+        articleLikesService.toggleDislikes(articleId, userId);
         return "redirect:/articles/{articleId}";
     }
 
     //comment button likes
-    @GetMapping("{articleId}/comment/{commentId}/likes")
+    @GetMapping("/{articleId}/comment/{commentId}/likes")
     @ExceptionHandler(NoArticleFoundException.class)
-    public String commentLikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
-        commentLikesService.toggleLikes(user.getId(), commentId);
+    public String commentLikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
+        commentLikesService.toggleLikes(userId, commentId);
         return "redirect:/articles/{articleId}";
     }
     //comment button dislikes
-    @GetMapping("{articleId}/comment/{commentId}/dislikes")
+    @GetMapping("/{articleId}/comment/{commentId}/dislikes")
     @ExceptionHandler(NoArticleFoundException.class)
-    public String commentDislikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) User user){
-        commentLikesService.toggleDislikes(user.getId(), commentId);
+    public String commentDislikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
+        commentLikesService.toggleDislikes(userId, commentId);
         return "redirect:/articles/{articleId}";
+    }
+
+    @GetMapping("/{articleId}/edit")
+    public String editArticle(@PathVariable int articleId, Model model){
+        model.addAttribute("article", articleService.findArticleById(articleId));
+        return "article/form/edit";
     }
 
     @ModelAttribute("categories")

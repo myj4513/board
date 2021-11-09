@@ -2,6 +2,7 @@ package study.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import study.board.enums.Category;
 
 import java.time.LocalDateTime;

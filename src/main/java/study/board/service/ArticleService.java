@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.ArticleView;
+import study.board.dto.User;
 import study.board.enums.Category;
 import study.board.enums.SortBy;
 import study.board.exceptions.NoArticleFoundException;
 import study.board.exceptions.NoArticlesException;
+import study.board.exceptions.NoAuthorityException;
 import study.board.mapper.ArticleMapper;
 
 import java.util.ArrayList;
@@ -59,6 +61,10 @@ public class ArticleService {
         return articles;
     }
 
+    public List<ArticleView> getArticlesById(int pageNum, int userId){
+        int sArticleNum = (pageNum-1)*10;
+        return articleMapper.findArticlesById(sArticleNum, userId);
+    }
 
     public int getTotalPages(){
         int articleNum = articleMapper.count();
@@ -69,5 +75,30 @@ public class ArticleService {
 
     public void addView(int articleId){
         articleMapper.addView(articleId, articleMapper.getView(articleId)+1);
+    }
+
+    public Article findArticleById(int articleId) {
+        return articleMapper.findById(articleId);
+    }
+
+    public void deleteArticle(int articleId, int userId) {
+        if(!hasAuthority(articleId, userId)){
+            throw new NoAuthorityException();
+        }
+        articleMapper.deleteById(articleId);
+    }
+
+    private boolean hasAuthority(int articleId, int userId){
+        Article article = findArticleById(articleId);
+        if(article.getUserId()==userId)
+            return true;
+        return false;
+    }
+
+    public void editArticle(ArticleForm articleForm, int articleId, int userId) {
+        if(!hasAuthority(articleId, userId)){
+            throw new NoAuthorityException();
+        }
+        articleMapper.updateById(articleId, articleForm);
     }
 }

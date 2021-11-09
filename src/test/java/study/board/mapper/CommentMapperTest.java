@@ -1,6 +1,7 @@
 package study.board.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,12 +24,13 @@ class CommentMapperTest {
     }
 
     @Test
+    @Disabled
     void findAllByArticleIdTest(){
         List<CommentView> commentViews = commentMapper.findAllByArticleId(6);
         for(CommentView comment : commentViews){
             log.info("content: {}", comment.getContent());
             log.info("regDate: {}", comment.getRegDate());
-            log.info("userId: {}", comment.getUserId());
+            //log.info("userId: {}", comment.getUserId());
         }
     }
 }

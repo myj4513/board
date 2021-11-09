@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         body{
             display: flex;
@@ -74,18 +75,31 @@
             border-top : 1px solid black;
             margin: 5px 0px;
         }
+        #editButton{
+            display: flex;
+            width: 100%;
+            justify-content: flex-end;
+        }
+        #editButton input{
+            margin-left : 2%;
+        }
     </style>
 </head>
 <body>
 
 <header th:if="${isLoggedIn}">
-    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${curUserName})}"></div>
 </header>
 <header th:unless="${isLoggedIn}">
     <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
 </header>
 
 <div id="title" ><a href="/">Board</a></div>
+
+<div id="editButton" th:if="${isLoggedIn} and ${curUserId} eq ${article.userId}">
+    <input type="button" value="수정" th:onclick="|location.href='@{/articles/{articleId}/edit(articleId=${articleId})}'|">
+    <input type="button" value="삭제" th:onclick="deleteArticle()">
+</div>
 
 <div th:object="${article}" class="article">
     <div class="line"></div>
@@ -108,12 +122,12 @@
 
     <div class="articleLikes">
         <div class="likes">
-            <input type="button" value="좋아요" th:onclick="|location.href='@{/articles/{articleId}/likes(articleId=${articleId})}'|"></input>
+            <input type="button" value="좋아요" th:onclick="|location.href='@{/articles/{articleId}/likes(articleId=${articleId})}'|">
             <span th:text="${likes}">12</span>
         </div>
         <input type="button" value="목록으로" onclick="location.href='/'">
         <div class="dislikes">
-            <input type="button" value="싫어요" th:onclick="|location.href='@{/articles/{articleId}/dislikes(articleId=${articleId})}'|"></input>
+            <input type="button" value="싫어요" th:onclick="|location.href='@{/articles/{articleId}/dislikes(articleId=${articleId})}'|">
             <span th:text="${dislikes}">3</span>
         </div>
     </div>
@@ -150,4 +164,18 @@
     </form>
 </div>
 </body>
+<script>
+    function deleteArticle(){
+        if(confirm("글을 삭제하시겠습니까?")){
+            axios.get("/api/articles/[[${articleId}]]/delete")
+                .then(response=>{
+                    window.location="/";
+                })
+                .catch(error=>{
+                    alert(error.response.data);
+                    window.history.back();
+                });
+        }
+    }
+</script>
 </html>

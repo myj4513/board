@@ -13,7 +13,7 @@
 </head>
 
 <header th:if="${isLoggedIn}">
-    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${currentUser.name})}"></div>
+    <div th:replace="~{fragment/header/navigationBar :: loggedIn (${curUserName})}"></div>
 </header>
 <header th:unless="${isLoggedIn}">
     <div th:replace="~{fragment/header/navigationBar :: notLoggedIn}"></div>
