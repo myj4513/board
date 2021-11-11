@@ -59,6 +59,7 @@
             join article as ar
                 on ar.id = ar_li.article_id and ar.category=#{category}
         order by ar_li.cnt desc
+        limit #{num}, 10
     </select>
 
     <select id="findNext10OrderByViews" resultType="ArticleView">
@@ -83,6 +84,7 @@
             ) as ar_li
             join article as ar on ar.id = ar_li.article_id
         order by ar_li.cnt desc
+        limit #{num}, 10
     </select>
     <delete id="deleteById">
         delete from article where id=#{articleId}
