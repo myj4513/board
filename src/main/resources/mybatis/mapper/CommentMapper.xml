@@ -21,10 +21,8 @@
                 where dislikes=1
                 group by comment_id
                 ) as c on a.id=c.comment_id
-            left join(
-                select id, name as username
-                from user
-                ) as d on a.user_id=d.id where article_id=#{articleId}
+            left join user as d
+                on a.user_id=d.id where article_id=#{articleId}
     </select>
 
     <select id="countComments" parameterType="int" resultType="int">
