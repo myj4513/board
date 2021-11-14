@@ -63,6 +63,7 @@ public class UserService {
         return userMapper.findById(userId);
     }
 
+    @Transactional
     public void updateUserInfo(UserEditForm userEditForm, int userId){
         try{
             String encryptedPassword = SHA256.encrypt(userEditForm.getPassword());
