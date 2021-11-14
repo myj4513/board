@@ -7,7 +7,8 @@
         function movePage(){
             const sortBy = document.getElementById("sortBy").value;
             const category = document.getElementById("category").value;
-            location.href="/?sortBy="+sortBy+"&category="+category;
+            const measure = document.getElementById("measure").value;
+            location.href="/?sortBy="+sortBy+"&category="+category+"&measure="+measure;
         }
     </script>
 </head>
@@ -30,7 +31,11 @@
 <select id="category" onchange="movePage()">
     <option th:each="category : ${Categories}" th:value="${category}" th:selected="${category.displayValue} == ${currCategory.displayValue}" th:text="${category.displayValue}">category name</option>
 </select>
-
+<select id="measure" onchange="movePage()">
+    <option th:value="10" th:selected="${measure}==10">10개씩 보기</option>
+    <option th:value="30" th:selected="${measure}==30">30개씩 보기</option>
+    <option th:value="50" th:selected="${measure}==50">50개씩 보기</option>
+</select>
 <div>
     <input type="button" value="글 작성" th:onclick="|location.href='@{/articles/article/write}'|">
 </div>

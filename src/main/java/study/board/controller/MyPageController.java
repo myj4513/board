@@ -39,8 +39,10 @@ public class MyPageController {
 
 
     @GetMapping("/articles")
-    public String article(@RequestParam(value = "page", defaultValue = "1") int page, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, Model model){
-        List<ArticleView> articlesById = articleService.getArticlesById(page, userId);
+    public String article(@RequestParam(value = "page", defaultValue = "1") int page,
+                          @RequestParam(value = "measure", defaultValue = "10") int measure,
+                          @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, Model model){
+        List<ArticleView> articlesById = articleService.getArticlesById(page, userId, measure);
         model.addAttribute("articles", articlesById);
         return "user/mypage/articles";
     }

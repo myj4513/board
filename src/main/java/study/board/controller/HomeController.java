@@ -19,11 +19,16 @@ public class HomeController {
     private final ArticleService articleService;
 
     @GetMapping("/")
-    public String homeLogin(@RequestParam(value = "page", defaultValue = "1") int pageNum, @RequestParam(value = "sortBy", defaultValue = "LATEST") SortBy sortBy, @RequestParam(value = "category", defaultValue = "ALL") Category category, Model model){
-        model.addAttribute("articles", articleService.getArticles(pageNum, sortBy, category));
-        model.addAttribute("totalPages", articleService.getTotalPages());
+    public String home(@RequestParam(value = "page", defaultValue = "1") int pageNum,
+                            @RequestParam(value = "sortBy", defaultValue = "LATEST") SortBy sortBy,
+                            @RequestParam(value = "category", defaultValue = "ALL") Category category,
+                            @RequestParam(value = "measure", defaultValue = "10") int measure,
+                            Model model){
+        model.addAttribute("articles", articleService.getArticles(pageNum, sortBy, category, measure));
+        model.addAttribute("totalPages", articleService.getTotalPages(measure));
         model.addAttribute("currSortBy", sortBy);
         model.addAttribute("currCategory", category);
+        model.addAttribute("measure", measure);
         return "home";
     }
 
