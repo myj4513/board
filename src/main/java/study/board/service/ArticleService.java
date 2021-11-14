@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.ArticleView;
-import study.board.dto.User;
 import study.board.enums.Category;
 import study.board.enums.SortBy;
 import study.board.exceptions.NoArticleFoundException;
@@ -39,24 +38,24 @@ public class ArticleService {
         List<ArticleView> articles = new ArrayList<>();
         if(category==Category.ALL){
             if(sortBy==SortBy.VIEWS){
-                articles = articleMapper.findNext10OrderByViews(sArticleNum, measure);
+                articles = articleMapper.findOrderByViews(sArticleNum, measure);
             }
             if(sortBy==SortBy.LATEST){
-                articles = articleMapper.findNext10OrderByRegDate(sArticleNum, measure);
+                articles = articleMapper.findOrderByRegDate(sArticleNum, measure);
             }
             if(sortBy==SortBy.LIKES){
-                articles = articleMapper.findNext10OrderByLikes(sArticleNum, measure);
+                articles = articleMapper.findOrderByLikes(sArticleNum, measure);
             }
             return articles;
         }
         if(sortBy==SortBy.VIEWS){
-            articles = articleMapper.findNext10WithCategoryOrderByViews(sArticleNum, category.name(), measure);
+            articles = articleMapper.findWithCategoryOrderByViews(sArticleNum, category.name(), measure);
         }
         if(sortBy==SortBy.LATEST){
-            articles = articleMapper.findNext10WithCategoryOrderByRegDate(sArticleNum, category.name(), measure);
+            articles = articleMapper.findWithCategoryOrderByRegDate(sArticleNum, category.name(), measure);
         }
         if(sortBy==SortBy.LIKES){
-            articles = articleMapper.findNext10WithCategoryOrderByLikes(sArticleNum, category.name(), measure);
+            articles = articleMapper.findWithCategoryOrderByLikes(sArticleNum, category.name(), measure);
         }
         return articles;
     }
