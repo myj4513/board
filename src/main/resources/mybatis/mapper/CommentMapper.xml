@@ -8,7 +8,7 @@
     </insert>
 
     <select id="findAllByArticleId" parameterType="int" resultType="CommentView">
-        select a.id, username, a.content, a.regdate, ifnull(likes,0) likes, ifnull(dislikes,0) dislikes from comment as a
+        select a.id, d.name, a.content, a.regdate, ifnull(likes,0) likes, ifnull(dislikes,0) dislikes from comment as a
             left join(
                 select comment_id, count(likes) as likes
                 from comment_likes

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import study.board.dto.Article;
 import study.board.dto.ArticleForm;
 import study.board.dto.CommentForm;
-import study.board.dto.User;
 import study.board.exceptions.NoArticleFoundException;
 import study.board.service.*;
 import study.board.enums.Category;
@@ -49,7 +48,6 @@ public class ArticleController {
     }
 
     //글상세보기
-    @ExceptionHandler(NoArticleFoundException.class)
     @GetMapping("/{articleId}")
     public String article(@PathVariable int articleId, Model model){
         Article article = articleService.findById(articleId);
@@ -67,7 +65,6 @@ public class ArticleController {
 
     //댓글 작성하기
     @PostMapping("/{articleId}/comment")
-    @ExceptionHandler(NoArticleFoundException.class)
     public String addComment(@PathVariable int articleId, Model model, @SessionAttribute(name = SessionConst.LOGIN_USER, required = false) int userId, @Validated @ModelAttribute CommentForm commentForm, BindingResult bindingResult){
 
         try{
@@ -94,7 +91,6 @@ public class ArticleController {
 
     //article button likes
     @GetMapping("/{articleId}/likes")
-    @ExceptionHandler(NoArticleFoundException.class)
     public String articleLikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
         articleLikesService.toggleLike(articleId, userId);
         return "redirect:/articles/{articleId}";
@@ -102,7 +98,6 @@ public class ArticleController {
 
     //article button dislikes
     @GetMapping("/{articleId}/dislikes")
-    @ExceptionHandler(NoArticleFoundException.class)
     public String articleDislikes(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
         articleLikesService.toggleDislikes(articleId, userId);
         return "redirect:/articles/{articleId}";
@@ -110,14 +105,12 @@ public class ArticleController {
 
     //comment button likes
     @GetMapping("/{articleId}/comment/{commentId}/likes")
-    @ExceptionHandler(NoArticleFoundException.class)
     public String commentLikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
         commentLikesService.toggleLikes(userId, commentId);
         return "redirect:/articles/{articleId}";
     }
     //comment button dislikes
     @GetMapping("/{articleId}/comment/{commentId}/dislikes")
-    @ExceptionHandler(NoArticleFoundException.class)
     public String commentDislikes(@PathVariable int articleId, @PathVariable int commentId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
         commentLikesService.toggleDislikes(userId, commentId);
         return "redirect:/articles/{articleId}";
