@@ -167,7 +167,7 @@
 <script>
     function deleteArticle(){
         if(confirm("글을 삭제하시겠습니까?")){
-            axios.get("/api/articles/[[${articleId}]]/delete")
+            axios.delete("/api/articles/[[${articleId}]]")
                 .then(response=>{
                     window.location="/";
                 })

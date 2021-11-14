@@ -59,7 +59,7 @@ public class AjaxController {
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
-    @PostMapping("/userInfo/edit")
+    @PatchMapping("/user/{userId}")
     public ResponseEntity<FieldErrorResponse> editUserInfo(@Validated @RequestBody UserEditForm userEditForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, HttpServletRequest request){
         if(!CheckPasswordPattern.isValidPassword(userEditForm.getPassword())){
             bindingResult.rejectValue("password", "invalid.password", "비밀번호는 8자 이상, 대소문자, 특수기호, 숫자를 포함해야합니다.");
@@ -74,20 +74,20 @@ public class AjaxController {
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
-    @GetMapping("/user/withdrawal")
+    @DeleteMapping("/user/{userId}")
     public ResponseEntity<ErrorResponse> withdrawal(@SessionAttribute(name = SessionConst.LOGIN_USER) int userId, HttpServletRequest request){
         SessionControl.invalidate(request);
         userService.deleteUser(userId);
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
-    @GetMapping("/articles/{articleId}/delete")
+    @DeleteMapping("/articles/{articleId}")
     public ResponseEntity<ErrorResponse> deleteArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
         articleService.deleteArticle(articleId, userId);
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 
-    @PostMapping("/articles/{articleId}/edit")
+    @PutMapping("/articles/{articleId}")
     public ResponseEntity<FieldErrorResponse> editArticle(@PathVariable int articleId, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId, @Validated @RequestBody ArticleForm articleForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return ResponseEntityCreation.getResponseEntity(bindingResult);

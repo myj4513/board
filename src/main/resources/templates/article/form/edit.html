@@ -41,7 +41,7 @@
     const category = document.querySelector('#category').value;
 
     e.preventDefault();
-    axios.post("/api/articles/[[${articleId}]]/edit", {"title" : title, "content" : content, "category" : category})
+    axios.put("/api/articles/[[${articleId}]]", {"title" : title, "content" : content, "category" : category})
     .then(response=>{
       window.location="/articles/[[${articleId}]]";
     })

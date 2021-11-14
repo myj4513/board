@@ -49,7 +49,7 @@
 <script>
     function withdrawal(){
         if(confirm("정말로 탈퇴하시겠습니까?")){
-            axios.get("/api/user/withdrawal")
+            axios.delete("/api/user/[[${curUserId}]]")
                 .then(response=>{
                     window.location="/";
                 })
