@@ -13,10 +13,6 @@
         select * from article where id=#{articleId}
     </select>
 
-    <select id="findNext10From" resultType="ArticleView">
-        select id, title, regdate from article limit #{num}, 10
-    </select>
-
     <select id="count" resultType="int">
         select count(*) from article;
     </select>
@@ -35,20 +31,20 @@
         limit #{num}, #{measure}
     </select>
 
-    <select id="findNext10WithCategoryOrderByViews" resultType="ArticleView">
+    <select id="findWithCategoryOrderByViews" resultType="ArticleView">
         select id, title, regdate from article
         where category=#{category}
         order by views desc
         limit #{num}, #{measure}
     </select>
 
-    <select id="findNext10WithCategoryOrderByRegDate" resultType="ArticleView">
+    <select id="findWithCategoryOrderByRegDate" resultType="ArticleView">
         select id, title, regdate from article
         where category=#{category} order by regdate desc
         limit #{num}, #{measure}
     </select>
 
-    <select id="findNext10WithCategoryOrderByLikes" resultType="ArticleView">
+    <select id="findWithCategoryOrderByLikes" resultType="ArticleView">
         select ar.id, ar.title, ar.regdate
         from (
             select article_id, count(likes) as cnt
@@ -62,19 +58,19 @@
         limit #{num}, #{measure}
     </select>
 
-    <select id="findNext10OrderByViews" resultType="ArticleView">
+    <select id="findOrderByViews" resultType="ArticleView">
         select id, title, regdate from article
         order by views desc
         limit #{num}, #{measure}
     </select>
 
-    <select id="findNext10OrderByRegDate" resultType="ArticleView">
+    <select id="findOrderByRegDate" resultType="ArticleView">
         select id, title, regdate from article
         order by regdate desc
         limit #{num}, #{measure}
     </select>
 
-    <select id="findNext10OrderByLikes" resultType="ArticleView">
+    <select id="findOrderByLikes" resultType="ArticleView">
         select ar.id, ar.title, ar.regdate
         from (
             select article_id, count(likes) as cnt
