@@ -29,6 +29,7 @@ public class HomeController {
         model.addAttribute("currSortBy", sortBy);
         model.addAttribute("currCategory", category);
         model.addAttribute("measure", measure);
+        model.addAttribute("curPage", pageNum);
         return "home";
     }
 
