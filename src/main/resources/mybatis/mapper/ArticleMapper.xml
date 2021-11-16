@@ -14,7 +14,11 @@
     </select>
 
     <select id="count" resultType="int">
-        select count(*) from article;
+        select count(*) from article where category=#{category}
+    </select>
+
+    <select id="countAll" resultType="int">
+        select count(*) from article
     </select>
 
     <select id="getView" resultType="int">
@@ -71,14 +75,14 @@
     </select>
 
     <select id="findOrderByLikes" resultType="ArticleView">
-        select ar.id, ar.title, ar.regdate
-        from (
-            select article_id, count(likes) as cnt
-            from article_likes
-            where likes = 1
-            group by article_id
-            ) as ar_li
-            join article as ar on ar.id = ar_li.article_id
+        select ar.id, ar.title, ar.regdate, ifnull(ar_li.cnt,0)
+        from article as ar
+            left join(
+                select article_id, count(likes) as cnt
+                from article_likes where likes=1
+                group by article_id
+                ) as ar_li
+                on ar.id = ar_li.article_id
         order by ar_li.cnt desc
         limit #{num}, #{measure}
     </select>

@@ -25,7 +25,7 @@ public class HomeController {
                             @RequestParam(value = "measure", defaultValue = "10") int measure,
                             Model model){
         model.addAttribute("articles", articleService.getArticles(pageNum, sortBy, category, measure));
-        model.addAttribute("totalPages", articleService.getTotalPages(measure));
+        model.addAttribute("totalPages", articleService.getTotalPages(measure, category));
         model.addAttribute("currSortBy", sortBy);
         model.addAttribute("currCategory", category);
         model.addAttribute("measure", measure);

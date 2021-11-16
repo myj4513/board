@@ -14,7 +14,8 @@ public interface ArticleMapper {
 
     public void add(Article article);
     public Article findById(int articleId);
-    public int count();
+    public int count(@Param("category") String category);
+    public int countAll();
     public int getView(int articleId);
     public void addView(@Param("articleId") int articleId, @Param("views") int views);
     public List<ArticleView> findArticlesById(@Param("num") int num, @Param("userId") int userId);

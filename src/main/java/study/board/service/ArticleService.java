@@ -65,8 +65,10 @@ public class ArticleService {
         return articleMapper.findArticlesById(sArticleNum, userId);
     }
 
-    public int getTotalPages(int measure){
-        int articleNum = articleMapper.count();
+    public int getTotalPages(int measure, Category category){
+        int articleNum = articleMapper.count(category.name());;
+        if(category==Category.ALL)
+            articleNum = articleMapper.countAll();
 
         if(articleNum<=0) throw new NoArticlesException();
         return (articleNum-1)/measure + 1;
