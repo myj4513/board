@@ -18,7 +18,7 @@ public interface ArticleMapper {
     public int countAll();
     public int getView(int articleId);
     public void addView(@Param("articleId") int articleId, @Param("views") int views);
-    public List<ArticleView> findArticlesById(@Param("num") int num, @Param("userId") int userId);
+    public List<ArticleView> findArticlesById(@Param("num") int num, @Param("userId") int userId, @Param("measure") int measure);
     public List<ArticleView> findWithCategoryOrderByViews(@Param("num") int num, @Param("category") String category, @Param("measure") int measure);
     public List<ArticleView> findWithCategoryOrderByRegDate(@Param("num") int num, @Param("category") String category, @Param("measure") int measure);
     public List<ArticleView> findWithCategoryOrderByLikes(@Param("num") int num, @Param("category") String category, @Param("measure") int measure);
