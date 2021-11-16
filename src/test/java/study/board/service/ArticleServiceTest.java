@@ -19,7 +19,6 @@ public class ArticleServiceTest {
     @DisplayName("한글 입력가능 ❤💝💔❣💛")
     @Disabled
     void getTotalPagesTest(){
-        int totalPages = articleService.getTotalPages();
-        Assertions.assertThat(totalPages).isEqualTo(6);
+
     }
 }

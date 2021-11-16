@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script type="text/javascript">
         function checkPassword(){
             var password = document.getElementById('password').value;
@@ -19,44 +20,44 @@
     </script>
 </head>
 <body>
-
-<h1>게 시 판</h1>
-
-<h4>회원 가입</h4>
-
-<form th:object="${user}" method="post" onsubmit="signup(event)">
-    <table>
-        <tr>
-            <td> 아이디 </td>
-            <td> <input type="text" th:field="*{loginId}" th:errorclass="field-error"> </td>
-            <td> <div class="loginId-error"></div> </td>
-        </tr>
-        <tr>
-            <td> 비밀번호 </td>
-            <td> <input type="password" th:field="*{password}" th:errorclass="field-error"> </td>
-            <td> <div class="password-error"></div> </td>
-        </tr>
-        <tr>
-            <td> 비밀번호 확인 </td>
-            <td> <input type="password" id="passwordCheck" name="passwordCheck" onchange="checkPassword()"> </td>
-            <td> <div id="passwordCheckMessage"></div></td>
-        </tr>
-        <tr>
-            <td> 이름 </td>
-            <td> <input type="text" th:field="*{name}" th:errorclass="field-error"> </td>
-            <td><div class="name-error"></div></td>
-        </tr>
-        <tr>
-            <td> 이메일 </td>
-            <td> <input type="email" th:field="*{email}" th:errorclass="field-error"> </td>
-            <td><div class="email-error"></div></td>
-        </tr>
-    </table>
-    <div>
-        <input type="submit" value="회원가입">
-        <input type="button" value="취소" th:onclick="|location.href='@{/}'|">
+<header th:if="${isLoggedIn}">
+    <nav th:replace="~{fragment/header/navBar :: loggedIn (${curUserName})}"></nav>
+</header>
+<header th:unless="${isLoggedIn}">
+    <div th:replace="~{fragment/header/navBar :: notLoggedIn}"></div>
+</header>
+<form class="d-flex flex-column align-items-center mt-5" method="post" th:object="${user}" onsubmit="signup(event)">
+    <div class="form-group col-6 mb-3">
+        <label for="loginId">ID</label>
+        <input input type="text" th:field="*{loginId}" id="loginId" class="form-control" aria-describedby="loginId-error" placeholder="Enter ID">
+        <small id="loginId-error" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-6 mb-3">
+        <label for="password">Password</label>
+        <input input type="password" th:field="*{password}" id="password" class="form-control" aria-describedby="password-error" placeholder="Password">
+        <small id="password-error" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-6 mb-3">
+        <label for="password">Chech Password</label>
+        <input input type="password" id="passwordCheck" class="form-control" aria-describedby="password-check-error" onchange="checkPassword()" placeholder="Password Check">
+        <small id="password-check-error" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-6 mb-3">
+        <label for="name">Name</label>
+        <input input type="text" th:field="*{name}" id="name" class="form-control" aria-describedby="name-error" placeholder="Name">
+        <small id="name-error" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-6 mb-3">
+        <label for="email">Email</label>
+        <input input type="email" th:field="*{email}" id="email" class="form-control" aria-describedby="email-error" placeholder="Email">
+        <small id="email-error" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-6 d-flex justify-content-between">
+        <button type="submit" class="btn btn-success col-5 mt-3">Sign Up</button>
+        <input type="button" class="btn btn-secondary col-5 mt-3" value="Cancel" th:onclick="|location.href='@{/}'|">
     </div>
 </form>
+
 </body>
 <script>
     function signup(e){
@@ -76,24 +77,24 @@
             const data = error.response.data.fieldErr;
             console.log(data);
             if(data.loginId!=undefined){
-                document.querySelector('.loginId-error').innerHTML = data.loginId;
+                document.querySelector('#loginId-error').innerHTML = data.loginId;
             }
             if(data.password!=undefined){
-                document.querySelector('.password-error').innerHTML = data.password;
+                document.querySelector('#password-error').innerHTML = data.password;
             }
             if(data.name!=undefined){
-                document.querySelector('.name-error').innerHTML = data.name;
+                document.querySelector('#name-error').innerHTML = data.name;
             }
             if(data.email!=undefined){
-                document.querySelector('.email-error').innerHTML = data.email;
+                document.querySelector('#email-error').innerHTML = data.email;
             }
         })
     }
     function clearErrorMessage(){
-        document.querySelector('.loginId-error').innerHTML = "";
-        document.querySelector('.password-error').innerHTML = "";
-        document.querySelector('.name-error').innerHTML = "";
-        document.querySelector('.email-error').innerHTML = "";
+        document.querySelector('#loginId-error').innerHTML = "";
+        document.querySelector('#password-error').innerHTML = "";
+        document.querySelector('#name-error').innerHTML = "";
+        document.querySelector('#email-error').innerHTML = "";
     }
 </script>
 </html>
