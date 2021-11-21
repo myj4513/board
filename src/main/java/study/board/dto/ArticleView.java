@@ -12,7 +12,6 @@ public class ArticleView {
 
     private int id;
     private String title;
-    private LocalDateTime regDate;
-
+    private String regDate;
 
 }

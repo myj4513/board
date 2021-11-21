@@ -1,6 +1,8 @@
 package study.board.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,7 @@ import study.board.enums.Category;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -25,6 +28,13 @@ class ArticleMapperTest {
         Article article = new Article(new ArticleForm("title", "content", Category.DAILY),1);
 
         articleMapper.add(article);
+    }
+
+    @Test
+    @DisplayName("카테고리 입력시 해당 카테고리의 글의 수를 반환")
+    void countTest(){
+        int count = articleMapper.count(Category.SPORTS.name());
+        assertThat(count).isEqualTo(50);
     }
 
     @Test

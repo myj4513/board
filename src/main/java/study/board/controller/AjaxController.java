@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.*;
@@ -95,6 +96,21 @@ public class AjaxController {
 
         articleService.editArticle(articleForm, articleId, userId);
 
+        return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
+    }
+
+    //글작성페이지 POST
+    @PostMapping("/articles/new")
+    public ResponseEntity<FieldErrorResponse> write(@Validated @RequestBody ArticleForm articleForm, BindingResult bindingResult, @SessionAttribute(name = SessionConst.LOGIN_USER) int userId){
+
+        log.info("articleForm : {}", articleForm);
+        log.info("category : {}", articleForm.getCategory());
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntityCreation.getResponseEntity(bindingResult);
+        }
+
+        articleService.write(articleForm, userId);
         return ResponseEntityCreation.SUCCESS_RESPONSE_ENTITY;
     }
 

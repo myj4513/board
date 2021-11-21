@@ -16,7 +16,17 @@
 
 <section class="mt-5 mx-auto w-75 d-flex flex-column align-items-center">
     <div class="w-100">
-        <div th:replace="~{user/mypage/fragment/myPageNavBar :: myPage-navBar}"></div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="">Info</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/mypage/articles">My Articles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/mypage/comments">My Comments</a>
+            </li>
+        </ul>
     </div>
     <form class="w-100 d-flex flex-column align-items-center mt-5" method="post" th:object="${user}" onsubmit="signup(event)">
         <div class="form-group col-6 mb-3">
