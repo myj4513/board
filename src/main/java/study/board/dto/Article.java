@@ -14,7 +14,7 @@ public class Article {
     private int id;
     private String title;
     private String content;
-    private LocalDateTime regDate;
+    private String regDate;
     private int views;
     private int userId;
     private Category category;

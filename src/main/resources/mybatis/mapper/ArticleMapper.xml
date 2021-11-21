@@ -30,26 +30,26 @@
     </update>
 
     <select id="findArticlesById" resultType="ArticleView">
-        select id, title, regdate from article
+        select id, title, date_format(regdate,'%Y년%m월%d일 %T') from article
         where user_id=#{userId}
         limit #{num}, #{measure}
     </select>
 
     <select id="findWithCategoryOrderByViews" resultType="ArticleView">
-        select id, title, regdate from article
+        select id, title, date_format(regdate,'%Y년%m월%d일 %T') from article
         where category=#{category}
         order by views desc
         limit #{num}, #{measure}
     </select>
 
     <select id="findWithCategoryOrderByRegDate" resultType="ArticleView">
-        select id, title, regdate from article
+        select id, title, date_format(regdate,'%Y년%m월%d일 %T') from article
         where category=#{category} order by regdate desc
         limit #{num}, #{measure}
     </select>
 
     <select id="findWithCategoryOrderByLikes" resultType="ArticleView">
-        select ar.id, ar.title, ar.regdate
+        select ar.id, ar.title, date_format(ar.regdate,'%Y년%m월%d일 %T')
         from (
             select article_id, count(likes) as cnt
             from article_likes
@@ -63,19 +63,19 @@
     </select>
 
     <select id="findOrderByViews" resultType="ArticleView">
-        select id, title, regdate from article
+        select id, title, date_format(regdate,'%Y년%m월%d일 %T') from article
         order by views desc
         limit #{num}, #{measure}
     </select>
 
     <select id="findOrderByRegDate" resultType="ArticleView">
-        select id, title, regdate from article
+        select id, title, date_format(regdate,'%Y년%m월%d일 %T') from article
         order by regdate desc
         limit #{num}, #{measure}
     </select>
 
     <select id="findOrderByLikes" resultType="ArticleView">
-        select ar.id, ar.title, ar.regdate, ifnull(ar_li.cnt,0)
+        select ar.id, ar.title, date_format(ar.regdate,'%Y년%m월%d일 %T'), ifnull(ar_li.cnt,0)
         from article as ar
             left join(
                 select article_id, count(likes) as cnt
