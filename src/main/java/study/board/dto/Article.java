@@ -1,13 +1,11 @@
 package study.board.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.board.enums.Category;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Getter @Setter
 @AllArgsConstructor
 public class Article {
 

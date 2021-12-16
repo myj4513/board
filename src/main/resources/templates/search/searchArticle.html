@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시판</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script>
+    function selectPage(){
+      const category = document.getElementById("category").value;
+      const measure = document.getElementById("measure").value;
+      location.href="/search/article?q=[[${q}]]&category="+category+"&measure="+measure;
+    }
+    function movePage(num){
+      const category = document.getElementById("category").value;
+      const measure = document.getElementById("measure").value;
+      var curPage = [[${curPage}]];
+      var totalPage = [[${totalPages}]];
+      var page = num;
+      if(num==-1){
+        if(curPage<=1)
+          return;
+        page = [[${curPage}]] -1;
+      }
+      else if(num==-2) {
+        if(curPage>=totalPage)
+          return;
+        page = [[${curPage}]] + 1
+      }
+      location.href="/search/article?q=[[${q}]]&category="+category+"&measure="+measure+"&page="+page;
+    }
+    function changeTarget(target){
+      location.href="/search/article?q=[[${q}]]&category=[[${currCategory}]]&measure=[[${measure}]]&page=[[${curPage}]]&target="+target;
+    }
+  </script>
+</head>
+<body>
+<div name="top"></div>
+<header th:if="${isLoggedIn}">
+  <nav th:replace="~{fragment/header/navBar :: loggedIn (${curUserName})}"></nav>
+</header>
+<header th:unless="${isLoggedIn}">
+  <div th:replace="~{fragment/header/navBar :: notLoggedIn}"></div>
+</header>
+<section class="mt-5 mx-auto w-75 d-flex flex-column align-items-center">
+
+  <div class="w-100">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" th:classappend="${target} == 'title' ? active" th:onclick="changeTarget('title')">Title</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:classappend="${target} == 'content' ? active" th:onclick="changeTarget('content')">Content</a>
+      </li>
+    </ul>
+  </div>
+  <div class="d-flex w-100 mt-3 justify-content-between">
+  <div>
+    <select id="category" class="form-select" onchange="selectPage()">
+      <option th:each="category : ${Categories}" th:value="${category}" th:selected="${category.displayValue} == ${currCategory.displayValue}" th:text="${category.displayValue}">category name</option>
+    </select>
+  </div>
+  <div>
+    <select id="measure" class="form-select" onchange="selectPage()">
+      <option th:value="10" th:selected="${measure}==10">10개씩 보기</option>
+      <option th:value="30" th:selected="${measure}==30">30개씩 보기</option>
+      <option th:value="50" th:selected="${measure}==50">50개씩 보기</option>
+    </select>
+  </div>
+  </div>
+<table class="table table-striped">
+  <thead class="thead-dark">
+  <tr>
+    <th class="col-2">Category</th>
+    <th class="col-2">Title</th>
+    <th class="col-2">Content</th>
+    <th class="col-2">Name</th>
+    <th class="col-2">Date</th>
+    <th class="col-2">Views</th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="article : ${articles}">
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.category}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.title}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.content}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.name}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.regDate}"></a></td>
+    <td><a th:href="|/articles/${article.id}|" th:text="${article.views}"></a></td>
+  </tr>
+  </tbody>
+</table>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item"><button class="page-link" th:onclick="|movePage(-1)|" th:text="Previous"></button></li>
+      <li th:each="num : ${#numbers.sequence(1,totalPages)}" class="page-item"><button class="page-link" th:onclick="|movePage(${num})|" th:text="${num}"></button></li>
+      <li class="page-item"><button class="page-link" th:onclick="|movePage(-2)|" th:text="Next"></button></li>
+    </ul>
+  </nav>
+</section>
+</body>
+</html>

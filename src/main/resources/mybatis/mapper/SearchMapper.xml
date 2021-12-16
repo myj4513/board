@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="study.board.mapper.SearchMapper">
+    <select id="searchArticleAll" resultType="ArticleSearch">
+        select article.id, category, title, content, u.name, regDate, views from article
+        left join(
+            select id, name from user
+        ) as u on article.user_id = u.id
+        where
+        <foreach collection="keyWords" item="keyWord" separator="and">
+            ${target} like concat('%',#{keyWord},'%')
+        </foreach>
+        limit #{num}, #{measure}
+    </select>
+
+    <select id="searchArticleCategory" resultType="ArticleSearch">
+        select article.id, category, title, content, u.name, regDate, views from article
+        left join(
+        select id, name from user
+        ) as u on user_id = u.id
+        where category = #{category} and
+        <foreach collection="keyWords" item="keyWord" separator="and">
+            ${target} like concat('%',#{keyWord},'%')
+        </foreach>
+        limit #{num}, #{measure}
+    </select>
+
+    <select id="countArticleAll" resultType="int">
+        select count(*) from article
+        where
+        <foreach collection="keyWords" item="keyWord" separator="and">
+            ${target} like concat('%',#{keyWord},'%')
+        </foreach>
+    </select>
+
+    <select id="countArticleCategory" resultType="int">
+        select count(*) from article
+        where category = #{category} and
+        <foreach collection="keyWords" item="keyWord" separator="and">
+            ${target} like concat('%',#{keyWord},'%')
+        </foreach>
+    </select>
+
+
+</mapper>
